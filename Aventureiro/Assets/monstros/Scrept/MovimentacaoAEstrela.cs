@@ -199,7 +199,6 @@ namespace montros
                         inicial = inicial.origem;
                     }
                     reverso.Reverse();
-                    Debug.Log("CCCCCC");
                     return reverso;
                 }
                 if (MaximoDeNodes != 0)

@@ -1,24 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class ColetarItem : MonoBehaviour
+namespace JogadorA
 {
-    public Inventa inventario;
-    public float maximoDistancia;
-    private void Update()
+    public class ColetarItem : MonoBehaviour
     {
-        
-        Ray raio = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-        RaycastHit rh;
-        if(Physics.Raycast(raio,out rh, maximoDistancia))
+        public Inventa inventario;
+        public float maximoDistancia;
+        private void Update()
         {
-            if (rh.collider.tag == "Item")
+
+            Ray raio = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+            RaycastHit rh;
+            if (Physics.Raycast(raio, out rh, maximoDistancia))
             {
-                if (Input.GetKeyDown(KeyCode.E))
+                if (rh.collider.tag == "Item")
                 {
-                    inventario.ColetarItem(rh.collider.transform.parent.gameObject);
-                    
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        inventario.ColetarItem(rh.collider.transform.parent.gameObject);
+
+                    }
                 }
             }
         }

@@ -2,23 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
-
-public class RotacionarParaJogador : MonoBehaviour
+namespace ItensA
 {
-    Transform jogador;
-    public LookAtConstraint lk;
-    void Start()
+    public class RotacionarParaJogador : MonoBehaviour
     {
-jogador = FindObjectOfType<movimentacaoJogador>().transform;
+        Transform jogador;
+        public LookAtConstraint lk;
+        void Start()
+        {
+            jogador = Camera.main.transform; 
 
-        ConstraintSource a = new ConstraintSource();
-        a.sourceTransform = jogador;
-        a.weight = 1;
-        lk.AddSource(a);
-        
+            ConstraintSource a = new ConstraintSource();
+            a.sourceTransform = jogador;
+            a.weight = 1;
+            lk.AddSource(a);
 
 
+
+        }
     }
-
-  
 }

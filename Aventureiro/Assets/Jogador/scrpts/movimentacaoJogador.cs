@@ -1,33 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class movimentacaoJogador : MonoBehaviour
+namespace JogadorA
 {
-    public float moveSpeed = 5.0f; // Velocidade de movimento
-    private CharacterController controller; // Referência ao CharacterController
-
-    void Start()
+    public class movimentacaoJogador : MonoBehaviour
     {
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.Locked;
-        controller = GetComponent<CharacterController>(); // Obtém a referência do CharacterController no objeto
-    }
+        public float moveSpeed = 5.0f; // Velocidade de movimento
+        private CharacterController controller; // Referência ao CharacterController
 
-    void Update()
-    {
-        // Obtém entrada do jogador para movimento
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        void Start()
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            controller = GetComponent<CharacterController>(); // Obtém a referência do CharacterController no objeto
+        }
 
-        // Calcula o vetor de movimento com base na entrada
-        Vector3 moveDirection = transform.TransformDirection(new Vector3(horizontalInput, 0, verticalInput));
-        moveDirection *= moveSpeed;
+        void Update()
+        {
+            // Obtém entrada do jogador para movimento
+            float horizontalInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
 
-        // Aplica a gravidade
-        moveDirection.y -= 9.8f;
+            // Calcula o vetor de movimento com base na entrada
+            Vector3 moveDirection = transform.TransformDirection(new Vector3(horizontalInput, 0, verticalInput));
+            moveDirection *= moveSpeed;
 
-        // Move o CharacterController
-        controller.Move(moveDirection * Time.deltaTime);
+            // Aplica a gravidade
+            moveDirection.y -= 9.8f;
+
+            // Move o CharacterController
+            controller.Move(moveDirection * Time.deltaTime);
+        }
     }
 }

@@ -2,29 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using ItensA;
 
-
-[CreateAssetMenu(fileName = "NovoProblema", menuName = "Quests/Problema", order = 1)]
-
-public class Problema : ScriptableObject
+namespace QuestsA
 {
-    public Problema proximoProblema;
-    public List<struct_DerrotarMonstro> monstros = new List<struct_DerrotarMonstro>();
-    public List<struct_ColetarItem> itens  = new List<struct_ColetarItem>();
+    [CreateAssetMenu(fileName = "NovoProblema", menuName = "Quests/Problema", order = 1)]
 
-    [System.Serializable]
-    public struct struct_DerrotarMonstro {
-        public DerrotarMonstro mosntro;
-        public int quantidade;
-    }
-    [System.Serializable]
-    public struct struct_ColetarItem
+    public class Problema : ScriptableObject
     {
-        public GeralIten item;
-        public int quantidade;
+        public Problema proximoProblema;
+        public List<struct_DerrotarMonstro> monstros = new List<struct_DerrotarMonstro>();
+        public List<struct_ColetarItem> itens = new List<struct_ColetarItem>();
+
+        [System.Serializable]
+        public struct struct_DerrotarMonstro
+        {
+            public DerrotarMonstro mosntro;
+            public int quantidade;
+        }
+        [System.Serializable]
+        public struct struct_ColetarItem
+        {
+            public GeralIten item;
+            public int quantidade;
+        }
+
+
     }
 
 
 }
-
-

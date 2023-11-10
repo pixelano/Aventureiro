@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "NovoProblemaDerrotarMonstros", menuName = "Quests/Problema-Derrotar mosntros", order = 1)]
-
-public class DerrotarMonstro : ScriptableObject
+namespace QuestsA
 {
-  
+    [CreateAssetMenu(fileName = "NovoProblemaDerrotarMonstros", menuName = "Quests/Problema-Derrotar mosntros", order = 1)]
+
+
+    public class DerrotarMonstro : ScriptableObject
+    {
+
+    }
 }

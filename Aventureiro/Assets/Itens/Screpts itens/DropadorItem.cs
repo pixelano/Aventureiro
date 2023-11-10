@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class DropadorItem : MonoBehaviour
+namespace ItensA
 {
-    public GeralIten iten;
-
-    private void Start()
+    public class DropadorItem : MonoBehaviour
     {
-        Instantiate(iten.modeloItem, transform.position, Quaternion.identity, transform);
+        public GeralIten iten;
+
+        private void Start()
+        {
+            Instantiate(iten.modeloItem, transform.position, Quaternion.identity, transform);
+        }
     }
 }

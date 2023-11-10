@@ -3,35 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using JogadorXQuestsA;
 
-public class ClickarEmCoisas : MonoBehaviour
+
+namespace JogadorA
 {
-    public TextMeshProUGUI txt;
-    public GameObject rm;
-    public GerenciadorQuestJogador gq;
-    private void Start()
+    public class ClickarEmCoisas : MonoBehaviour
     {
-        gq = FindObjectOfType<GerenciadorQuestJogador>();
-    }
-    public void mostrarResumo(Quest a)
-    {
-        if (a != null)
+        public TextMeshProUGUI txt;
+        public GameObject rm;
+        public JogadorXQuests gq;
+        private void Start()
         {
-            txt.text = a.narrativa.resumo.text;
+            gameObject.AddComponent<JogadorXQuests>();
+            gq = JogadorXQuests.instance;
         }
-        else
+        public void mostrarResumo(string a)
         {
-            txt.text = "";
-        }
-    }
-    public void flipflop(bool a)
-    {
-        rm.SetActive ( a);
-            
+            if (a != null)
+            {
+                txt.text = a;
             }
-    public void clikou(Quest a)
-    {
-        gq.clikou(a);
-    }
+            else
+            {
+                txt.text = "";
+            }
+        }
+        public void flipflop(bool a)
+        {
+            rm.SetActive(a);
 
+        }
+        public void clikou(int a)
+        {
+            gq.clikou(a);
+        }
+
+    }
 }

@@ -2,63 +2,68 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-public class Inventa : MonoBehaviour
+using ItensA; 
+
+namespace JogadorA
 {
-    public List<slotInventario> inventarioLista = new List<slotInventario>();
- 
-   
-
-    void adicionarItem(GeralIten a)
+    public class Inventa : MonoBehaviour
     {
-        if(inventarioLista.Exists(x=>x.iten == a))
+        public List<slotInventario> inventarioLista = new List<slotInventario>();
+
+
+
+        void adicionarItem(GeralIten a)
         {
+            if (inventarioLista.Exists(x => x.iten == a))
+            {
 
-            slotInventario aux = inventarioLista.Find(x => x.iten == a);//.adicionar(1);
+                slotInventario aux = inventarioLista.Find(x => x.iten == a);//.adicionar(1);
 
-            aux.quantidade++ ;
+                aux.quantidade++;
+            }
+            else
+            {
+                slotInventario aux = new slotInventario(a);
+
+                aux.adicionar(1);
+                inventarioLista.Add(aux);
+            }
         }
-        else
+        public void ColetarItem(GameObject rh)
         {
-            slotInventario aux = new slotInventario(a);
-           
-            aux.adicionar(1);
-            inventarioLista.Add(aux);
+            adicionarItem(rh.GetComponent<DropadorItem>().iten);
+            Destroy(rh);
+
         }
-    }
-    public void ColetarItem(GameObject rh)
-    {
-        adicionarItem( rh.GetComponent<DropadorItem>().iten);
-        Destroy(rh);
-     
-    }
-    public bool temecItem (GeralIten a , int quantidade)
-    {
-        if (inventarioLista.Exists(x => x.iten == a))
+        public bool temecItem(GeralIten a, int quantidade)
         {
-            slotInventario aa = inventarioLista.Find(x => x.iten == a);
-            return  aa.quantidade >= quantidade ;
+            if (inventarioLista.Exists(x => x.iten == a))
+            {
+                slotInventario aa = inventarioLista.Find(x => x.iten == a);
+                return aa.quantidade >= quantidade;
+            }
+            else
+            {
+                return false;
+            }
         }
-        else
+    }
+    [System.Serializable]
+    public class slotInventario
+    {
+        public GeralIten iten;
+        public int quantidade;
+
+        public slotInventario(GeralIten a)
         {
-            return false;
+            iten = a;
+            quantidade = 1;
         }
-    }
-}
-[System.Serializable]
-public class slotInventario
-{
-    public GeralIten iten;
-    public int quantidade;
 
-    public slotInventario(GeralIten a)
-    {
-        iten = a;
-        quantidade = 1;
-    }
+        public void adicionar(int q)
+        {
+            quantidade = quantidade + q;
+        }
 
-    public void adicionar(int q)
-    {
-        quantidade = quantidade + q;
     }
-
 }

@@ -1,27 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class AtivadorCursor : MonoBehaviour
+namespace Estruturas
 {
-    private gerenciadorCursor gcursor;
-    private void Start()
+    public class AtivadorCursor : MonoBehaviour
     {
-        gcursor = GetComponent<gerenciadorCursor>();
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-     
-        if(other.tag == "Player")
+        private gerenciadorCursor gcursor;
+        private void Start()
         {
-            gcursor.enabled = true;
+            gcursor = GetComponent<gerenciadorCursor>();
         }
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Player")
+        private void OnTriggerEnter(Collider other)
         {
-            gcursor.enabled = false;
+
+            if (other.tag == "Player")
+            {
+                gcursor.enabled = true;
+            }
+        }
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.tag == "Player")
+            {
+                gcursor.enabled = false;
+            }
         }
     }
 }

@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-public class PlacaDeQuest : MonoBehaviour
+using QuestsA;
+namespace Estruturas
 {
-    public TextMeshPro txt;
-    public Quest q;
-   public void iniciarPlaca(Texto a)
+    public class PlacaDeQuest : MonoBehaviour
     {
-        txt.text = a.text;
+        public TextMeshPro txt;
+        public Quest q;
+        public void iniciarPlaca(string a)
+        {
+            txt.text = a;
+        }
     }
 }

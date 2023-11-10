@@ -1,26 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using QuestsA;
 using UnityEngine.UI;
 using TMPro;
-public class interagirComPlacas : MonoBehaviour, ImouseInteracao
+namespace Estruturas
 {
-    public Text texto;
-    public void Selecionando()
+    public class interagirComPlacas : MonoBehaviour, ImouseInteracao
     {
-      //  Debug.Log("selecionando");
-    }
-    public void Clickando() {
+        public Text texto;
+        public void Selecionando()
+        {
+            //  Debug.Log("selecionando");
+        }
+        public void Clickando()
+        {
 
-      //  Debug.Log("clikou");
-    }
-    public GameObject gameobject()
-    {
-        return gameObject;
-    }
-    public void Selecionando(Quest a)
-    {
+            //  Debug.Log("clikou");
+        }
+        public GameObject gameobject()
+        {
+            return gameObject;
+        }
+        public void Selecionando(Quest a)
+        {
 
+        }
     }
+
 }
