@@ -9,7 +9,7 @@ namespace montros
     {
         public Terrain terreno;
         public GameObject terreno_;
-        public Vector3 target;
+        private Vector3 target;
    
          List<Vector3> caminho = new List<Vector3>();
         [HideInInspector]
@@ -19,16 +19,17 @@ namespace montros
         Vector3 rota;
 
 
-        public float distanciaMaximaASePercorrer; 
-   
+        public float distanciaMaximaASePercorrer;
 
-        public bool calcularRota_b; // remover isso
+
+        private bool calcularRota_b; // remover isso
 
         public float alturaDoRaycast, distanciaVisao,escala;
 
         public LayerMask layersColisores;
         public int MaximoDeNodes;
         public float velocidade;
+        public float distanciaParaDiminuirVelocidade;
 
         void Start()
         {
@@ -51,6 +52,7 @@ namespace montros
             }
             MaximoDeNodes = MaximoDeNodes < 10 ?90 :MaximoDeNodes;
             velocidade = velocidade <= 0 ? 4:velocidade;
+            distanciaParaDiminuirVelocidade = distanciaParaDiminuirVelocidade < 1 ? 1 : distanciaParaDiminuirVelocidade;
 
 
         }
@@ -74,9 +76,11 @@ namespace montros
             }
         }
         public void movimentarPara(Vector3 a){
-            
-            target = a;
-            calcularRota_b = true;
+            if (caminho.Count <= 0)
+            {
+                target = a;
+                calcularRota_b = true;
+            }
         }
         public void pare(){
          caminho.Clear();   
@@ -106,12 +110,14 @@ namespace montros
                 aaa.Clear();
                 abbb.Clear();
             }
+auxVelocidade =Mathf.Lerp(auxVelocidade,(  Vector3.Distance(transform.position,target) <= distanciaParaDiminuirVelocidade ? 2 : velocidade),
+    0.5f);
             if (caminho.Count >0)
             {
                 rota = attNode();
                 if (rota != null)
                 {
-                        transform.position = AjustarAlturaChaoS(Vector3.Lerp(transform.position, (Vector3.Normalize(rota - transform.position) * velocidade) + transform.position, Time.deltaTime));
+                        transform.position = AjustarAlturaChaoS(Vector3.Lerp(transform.position, (Vector3.Normalize(rota - transform.position) * auxVelocidade) + transform.position, Time.deltaTime));
                
                 }
             }
@@ -120,6 +126,7 @@ namespace montros
                 transform.position = AjustarAlturaChaoS(transform.position);
             }
         }
+        float auxVelocidade;
         public Vector3 AjustarAlturaChao(Vector3 a)
         {
             Vector3 local = a;

@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc46efd73755142439e0ec60bb3f4723, type: 3}
   m_Name: teste repositorio
   m_EditorClassIdentifier: 
-  quests: []
+  quests:
+  - {fileID: 11400000, guid: cfebab870de8af043b13cf72e9d4ea2f, type: 2}

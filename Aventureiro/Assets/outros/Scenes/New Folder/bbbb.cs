@@ -6,14 +6,6 @@ namespace teste
 {
     public class bbbb : MonoBehaviour
     {
-        public aaaaaa teste_;
-        void Start()
-        {
-           gameObject.AddComponent<aaaaaa>();
-            teste_ = aaaaaa.oi;
-
-            GameObject.CreatePrimitive(PrimitiveType.Cube) ;
-        }
-
+        
     }
 }
