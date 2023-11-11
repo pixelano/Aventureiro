@@ -9,9 +9,9 @@ namespace montros
     {
         public Terrain terreno;
         public GameObject terreno_;
-        private Vector3 target;
-   
-         List<Vector3> caminho = new List<Vector3>();
+        public Vector3 target, target_;
+
+        public List<Vector3> caminho = new List<Vector3>();
         [HideInInspector]
         public List<Vector3> aaa = new List<Vector3>();
         [HideInInspector]
@@ -79,6 +79,7 @@ namespace montros
             if (caminho.Count <= 0)
             {
                 target = a;
+                target_ = a;
                 calcularRota_b = true;
             }
         }
@@ -174,7 +175,7 @@ auxVelocidade =Mathf.Lerp(auxVelocidade,(  Vector3.Distance(transform.position,t
             }
             return rota;
         }
-   
+        public bool chegou;
         public List<node > calcularRota(Vector3 destino,LayerMask lms)
         {
             List<node> caminhosPossiveis = new List<node>();
@@ -183,9 +184,18 @@ auxVelocidade =Mathf.Lerp(auxVelocidade,(  Vector3.Distance(transform.position,t
           while(caminhosPossiveis.Count > 0)
             {
 
-             
-              
-               
+                
+                if(Vector3.Distance(transform.position , target_) < distanciaVisao || Physics.Raycast(transform.position,target_ - transform.position,distanciaVisao,layersColisores))
+                {
+                    caminhosPossiveis.Clear();
+                    chegou = true;
+                    caminhosPossiveis.Add(definirUltimo(null));
+                    return caminhosPossiveis;
+                }
+                else
+                {
+                    chegou = false;
+                }
                 node inicial = caminhosPossiveis[0];
 
                 for(int x= 0; x < caminhosPossiveis.Count; x++)
@@ -199,6 +209,7 @@ auxVelocidade =Mathf.Lerp(auxVelocidade,(  Vector3.Distance(transform.position,t
                
                     if (Vector3.Distance(AjustarAlturaChao( inicial.local),AjustarAlturaChao(destino)) < 1 * escala)
                 {
+                    inicial = definirUltimo(inicial);
                     List<node> reverso = new List<node>();
                     while(inicial != null)
                     {
@@ -256,7 +267,48 @@ auxVelocidade =Mathf.Lerp(auxVelocidade,(  Vector3.Distance(transform.position,t
             return null;
         }
   
+        public node definirUltimo(node a)
+        {
+            if (a != null)
+            {
+                RaycastHit hit;
+                Physics.Raycast(a.local, target_ - a.local, out hit, distanciaVisao);
+                if (hit.collider != null)
+                {
+                    Vector3 maisperto = hit.point;
 
+                    node novo = new node(maisperto, a);
+                    return novo;
+                }
+                else
+                {
+                    Vector3 maisperto = target_;
+
+                    node novo = new node(maisperto, a);
+                    return novo;
+                }
+
+            }
+            else
+            {
+                RaycastHit hit;
+                Physics.Raycast(transform.position, target_ - transform.position, out hit, distanciaVisao,layersColisores);
+                if (hit.collider != null)
+                {
+                    Vector3 maisperto = hit.point;
+
+                    node novo = new node(maisperto, null);
+                    return novo;
+                }
+                else
+                {
+                    Vector3 maisperto = target_;
+
+                    node novo = new node(maisperto, null);
+                    return novo;
+                }
+            }
+        }
 
         public List<node> testarLocais(node origem,LayerMask mlks)
         {
@@ -298,7 +350,7 @@ auxVelocidade =Mathf.Lerp(auxVelocidade,(  Vector3.Distance(transform.position,t
         }
 
     [System.Serializable]
-        public class node
+        public class node   
         {
 
             public Vector3 local;
