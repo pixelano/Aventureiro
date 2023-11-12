@@ -1,12 +1,13 @@
 {
-    "name": "montros",
-    "rootNamespace": "montros",
+    "name": "ATransmut",
+    "rootNamespace": "ATransmut",
     "references": [
-        "GUID:afc36e152d767c14e96aea50f1deca3f"
+        "ItensA",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": true,
+    "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,

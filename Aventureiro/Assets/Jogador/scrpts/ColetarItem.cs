@@ -1,3 +1,4 @@
+using ItensA;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,7 @@ namespace JogadorA
                 {
                     if (Input.GetKeyDown(KeyCode.E))
                     {
-                        inventario.ColetarItem(rh.collider.transform.parent.gameObject);
+                        inventario.ColetarItem(rh.collider.gameObject);
 
                     }
                 }

@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c262cb74f1c91646aeb507fd200b887, type: 3}
-  m_Name: itemTeste
+  m_Script: {fileID: 11500000, guid: f8642eaee72f66049864bb5573ddfe30, type: 3}
+  m_Name: exemplgoDeAtaque
   m_EditorClassIdentifier: 
-  modeloItem: {fileID: 4298865019374377789, guid: ec40e2ab836e9d242a0cd8353fe9abc0, type: 3}
-  valor: 1
-  receita: []
+  tempoDeRecarga: 2
+  distanciaAtaque: 5
+  tempoDeCast: 3
+  dano: 1

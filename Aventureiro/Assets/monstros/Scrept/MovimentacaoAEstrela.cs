@@ -52,7 +52,7 @@ namespace montros
             }
             MaximoDeNodes = MaximoDeNodes < 10 ?90 :MaximoDeNodes;
             velocidade = velocidade <= 0 ? 4:velocidade;
-            distanciaParaDiminuirVelocidade = distanciaParaDiminuirVelocidade < 1 ? 1 : distanciaParaDiminuirVelocidade;
+            distanciaParaDiminuirVelocidade = distanciaParaDiminuirVelocidade < 1 ? 4 : distanciaParaDiminuirVelocidade;
 
 
         }
@@ -75,13 +75,24 @@ namespace montros
                 return bb;
             }
         }
-        public void movimentarPara(Vector3 a){
-            if (caminho.Count <= 0)
+        public void movimentarParaS(Vector3 a){
+            if (a != target_)
             {
+                if (caminho.Count <= 0)
+                {
+                    target = a;
+                    target_ = a;
+                    calcularRota_b = true;
+                }
+            }
+        }
+        public void movimentarPara(Vector3 a)
+        {
+            
                 target = a;
                 target_ = a;
                 calcularRota_b = true;
-            }
+           
         }
         public void pare(){
          caminho.Clear();   
@@ -125,6 +136,15 @@ auxVelocidade =Mathf.Lerp(auxVelocidade,(  Vector3.Distance(transform.position,t
             else
             {
                 transform.position = AjustarAlturaChaoS(transform.position);
+            }
+
+            if(caminho.Count <= 1)
+            {
+                chegou = true;
+            }
+            else
+            {
+                chegou = false;
             }
         }
         float auxVelocidade;
@@ -188,14 +208,11 @@ auxVelocidade =Mathf.Lerp(auxVelocidade,(  Vector3.Distance(transform.position,t
                 if(Vector3.Distance(transform.position , target_) < distanciaVisao || Physics.Raycast(transform.position,target_ - transform.position,distanciaVisao,layersColisores))
                 {
                     caminhosPossiveis.Clear();
-                    chegou = true;
+                    
                     caminhosPossiveis.Add(definirUltimo(null));
                     return caminhosPossiveis;
                 }
-                else
-                {
-                    chegou = false;
-                }
+              
                 node inicial = caminhosPossiveis[0];
 
                 for(int x= 0; x < caminhosPossiveis.Count; x++)

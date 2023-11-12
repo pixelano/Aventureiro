@@ -9,8 +9,20 @@ namespace JogadorA
     public class Inventa : MonoBehaviour
     {
         public List<slotInventario> inventarioLista = new List<slotInventario>();
+        public float dinheiro;
+        public static Inventa instance;
+        private void Start()
+        {
+            if(Inventa.instance == null)
+            {
+                Inventa.instance = this;
+            }
+        }
 
-
+        public static void solicitado(GeralIten a, bool craft)
+        {
+            Debug.Log(a.name + "   foi solicitado   " + (craft ? " crafitar" : "comprar"));
+        }
 
         void adicionarItem(GeralIten a)
         {
@@ -31,7 +43,7 @@ namespace JogadorA
         }
         public void ColetarItem(GameObject rh)
         {
-            adicionarItem(rh.GetComponent<DropadorItem>().iten);
+            adicionarItem(rh.GetComponent<ItemT>().dataItem);
             Destroy(rh);
 
         }

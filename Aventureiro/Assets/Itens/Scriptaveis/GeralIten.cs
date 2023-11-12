@@ -8,5 +8,7 @@ namespace ItensA
     public class GeralIten : ScriptableObject
     {
         public GameObject modeloItem;
+        public float valor;
+        public List<GeralIten> receita;
     }
 }

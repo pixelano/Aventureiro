@@ -7,6 +7,7 @@ namespace montros
     [CreateAssetMenu(fileName = "Novo ataque", menuName = "Monstros/NovoAtaque", order = 1)]
     public class SAtaques : ScriptableObject
     {
-     
+        public float tempoDeRecarga,distanciaAtaque,tempoDeCast;
+        public float dano;
     }
 }

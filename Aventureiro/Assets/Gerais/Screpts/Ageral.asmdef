@@ -1,12 +1,10 @@
 {
-    "name": "montros",
-    "rootNamespace": "montros",
-    "references": [
-        "GUID:afc36e152d767c14e96aea50f1deca3f"
-    ],
+    "name": "Ageral",
+    "rootNamespace": "Ageral",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": true,
+    "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
