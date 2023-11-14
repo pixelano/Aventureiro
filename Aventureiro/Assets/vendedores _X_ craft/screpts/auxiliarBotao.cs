@@ -10,7 +10,12 @@ namespace ATransmut
       
         public GeralIten a;
         public bool craft;
+        public auxResumo back;
 
+        public void mandarBack()
+        {
+            back.receba(a,craft);
+        }
       
     }
 }

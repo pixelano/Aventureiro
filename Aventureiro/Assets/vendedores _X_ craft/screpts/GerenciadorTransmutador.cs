@@ -12,7 +12,7 @@ namespace ATransmut
         public GameObject tela,lista;
         public GameObject prefab_ListaNome;
         List<GameObject> cadaNome = new List<GameObject>();
-       
+        public auxResumo ars;
         public bool abrir;
      
         void executarLista()
@@ -27,6 +27,7 @@ namespace ATransmut
             }
             for(int x= 0; x < atual.para.Count; x++)
             {
+
                 GameObject a = (Instantiate(prefab_ListaNome, lista.transform));
                 TextMeshProUGUI b = a.GetComponentInChildren<TextMeshProUGUI>();
                 b.text = atual.para[x].name;
@@ -34,6 +35,7 @@ namespace ATransmut
                 auxiliarBotao c = a.GetComponent<auxiliarBotao>();
                 c.a = atual.para[x];
                 c.craft = atual.craft;
+                c.back = ars;
                 
                 cadaNome.Add(a);
             }

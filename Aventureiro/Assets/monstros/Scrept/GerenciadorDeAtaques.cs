@@ -8,7 +8,6 @@ namespace montros
 {
     public class GerenciadorDeAtaques : MonoBehaviour
     {
-       
         public float distancia;
         float distancia_;
         public List<SAtaques> lista;

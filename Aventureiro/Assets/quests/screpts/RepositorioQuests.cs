@@ -12,12 +12,15 @@ namespace QuestsA
         public  List<Quest> quests = new List<Quest>();
         public RepositorioQuestS rtqs;
         public static RepositorioQuests instance;
+        public bool main_;
         private void Awake()
         {
-
-            quests.AddRange(rtqs.quests);
-            quests.ForEach(x=>x.ID_ = x.GetInstanceID());
-            
+            if(main_ ) { instance = this; }
+            if (rtqs != null)
+            {
+                quests.AddRange(rtqs.quests);
+            }
+            quests.ForEach(x => x.ID_ = x.GetInstanceID());
 
         }
     }

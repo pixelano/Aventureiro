@@ -11,7 +11,7 @@ namespace JogadorA
     public class ClickarEmCoisas : MonoBehaviour
     {
         public TextMeshProUGUI txt;
-        public GameObject rm;
+        public GameObject resumoDeQuest;
         public JogadorXQuests gq;
         private void Start()
         {
@@ -31,7 +31,7 @@ namespace JogadorA
         }
         public void flipflop(bool a)
         {
-            rm.SetActive(a);
+            resumoDeQuest.SetActive(a);
 
         }
         public void clikou(int a)

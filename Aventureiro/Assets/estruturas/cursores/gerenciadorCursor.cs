@@ -102,7 +102,7 @@ namespace Estruturas
 
             float distancia = Vector3.Distance(camera_.transform.position, cursor.transform.position);
 
-            float veloc = Mathf.Abs(Mathf.Clamp(((distancia / AjustarEscala)), 0.09f, 1)) * 0.8f;
+            float veloc = Mathf.Abs(Mathf.Clamp(((distancia / AjustarEscala)), 0.09f, 1)) * 0.3f;
             float posicaoFinalX = posicaoAgora.x + mouseX * veloc;
             float posicaoFinalY = posicaoAgora.y + mouseY * veloc;
 
@@ -148,7 +148,7 @@ namespace Estruturas
         private void OnEnable()
         {
             flag = false;
-            camera_.GetComponent<LookAtConstraint>().enabled = true;
+       //   camera_.GetComponent<LookAtConstraint>().enabled = true;
             clk.flipflop(true);
             cursor.GetComponent<MeshRenderer>().enabled = true;
 

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c1719b64bc245419e34681063dfcf4, type: 3}
+  m_Name: mate a vaca
+  m_EditorClassIdentifier: 
+  narrativa: {fileID: 11400000, guid: 1b2905e1ea1fa164495509ebf219cfa9, type: 2}
+  problema: {fileID: 11400000, guid: b5a1e799169a3164999b78eab4eb2ee1, type: 2}
+  ID_: 25900
+  recompensa: []
+  ouroRecompensa: 21

@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modeloItem: {fileID: 4298865019374377789, guid: ec40e2ab836e9d242a0cd8353fe9abc0, type: 3}
   valor: 1
-  receita: []
+  receita:
+  - {fileID: 11400000, guid: 9c59810dab6a54046a039e824fd28eb2, type: 2}

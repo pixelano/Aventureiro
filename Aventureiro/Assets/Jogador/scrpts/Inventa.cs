@@ -9,6 +9,7 @@ namespace JogadorA
     public class Inventa : MonoBehaviour
     {
         public List<slotInventario> inventarioLista = new List<slotInventario>();
+        public SalvarInventario sv;
         public float dinheiro;
         public static Inventa instance;
         private void Start()
@@ -16,15 +17,29 @@ namespace JogadorA
             if(Inventa.instance == null)
             {
                 Inventa.instance = this;
+                inventarioLista = sv.inventarioLista;
+                dinheiro = sv.dinheiro;
             }
         }
 
-        public static void solicitado(GeralIten a, bool craft)
+        public void obterItem(GeralIten a, bool b)
         {
-            Debug.Log(a.name + "   foi solicitado   " + (craft ? " crafitar" : "comprar"));
+            if (b)
+            {
+                foreach (GeralIten c in a.receita) {
+                    diminuir(c,1);
+                }
+            }
+            else
+            {
+                dinheiro -= a.valor;
+            }
+            adicionarItem(a);
         }
 
-        void adicionarItem(GeralIten a)
+
+
+        public void adicionarItem(GeralIten a)
         {
             if (inventarioLista.Exists(x => x.iten == a))
             {
@@ -37,9 +52,23 @@ namespace JogadorA
             {
                 slotInventario aux = new slotInventario(a);
 
-                aux.adicionar(1);
                 inventarioLista.Add(aux);
             }
+        }
+        public void diminuir(GeralIten a, int b)
+        {
+            if (inventarioLista.Exists(x => x.iten == a))
+            {
+
+                slotInventario aux = inventarioLista.Find(x => x.iten == a);//.adicionar(1);
+
+                aux.quantidade -= b;
+                if(aux.quantidade <= 0)
+                {
+                    inventarioLista.Remove(aux);
+                }
+            }
+          
         }
         public void ColetarItem(GameObject rh)
         {

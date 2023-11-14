@@ -10,7 +10,8 @@ namespace QuestsA
 {
     public class GerenciadorQuestJogador : MonoBehaviour
     {
-        public List<DerrotarMonstro> monstr;
+        public List<DerrotarMonstro> monstr = new List<DerrotarMonstro>();
+        public SalvarListaDerrotarMonstros salvarListaMonstros ;
         public List<TodosOsMonstros> monstros = new List<TodosOsMonstros>();
 
         public List<gQuest> ListaQuests = new List<gQuest>();
@@ -22,17 +23,18 @@ namespace QuestsA
         public struct gQuest
         {
             public Quest quest_;
-            public int quantidadeInicial;
+            public List<TodosOsMonstros> quantidadeInicial ;
 
         }
+        [System.Serializable]
         public struct TodosOsMonstros
         {
             public DerrotarMonstro monstro;
-            public int quantidade;
+            public int quantidade,quantidadeAtual;
         }
         private void Start()
         {
-
+        monstr = salvarListaMonstros.monstr;
             gameObject.AddComponent< JogadorXQuests>();
             try
             {
@@ -52,19 +54,41 @@ namespace QuestsA
 
         public void clikou(int a)
         {
-            if (ListaQuests.Count > 0)
+            Debug.Log("clikou");
+
+            if (ListaQuests.Exists(x => x.quest_.ID_ == a) )
             {
-                if (ListaQuests.Exists(x => x.quest_.ID_ == a) || QuestsCompletas.Exists(x => x.quest_.ID_ == a))
-                {
-                    ListaQuests.Remove(ListaQuests.Find(x => x.quest_.ID_ == a));
-                }
-                else
-                {
-                    gQuest aux = new gQuest();
-                    aux.quest_ = rps.quests.Find(x => x.ID_ == a);
-                    ListaQuests.Add(aux);
-                }
+                ListaQuests.Remove(ListaQuests.Find(x => x.quest_.ID_ == a));
+            }else if (QuestsCompletas.Exists(x => x.quest_.ID_ == a))
+            {
+
             }
+            else
+            {
+
+                gQuest aux = new gQuest();
+                aux.quest_ = rps.quests.Find(x => x.ID_ == a);
+                aux.quantidadeInicial = new List<TodosOsMonstros>();
+              
+                if (aux.quest_.problema.monstros.Count > 0)
+                {
+
+                    foreach (var v in aux.quest_.problema.monstros)
+                    {
+                        TodosOsMonstros aux_x = new TodosOsMonstros();
+                        aux_x.monstro = v.mosntro;
+                        aux_x.quantidade = v.quantidade;
+                        aux_x.quantidadeAtual = monstr.Find(x => x == aux_x.monstro).quantidade;
+
+                        aux.quantidadeInicial.Add(aux_x);
+                    }
+                }
+              
+              
+                ListaQuests.Add(aux);
+
+            }
+           
             jq.listaClicks.RemoveAt(0);
         }
         public bool completouQuestItens(GeralIten a, int quantidade)
@@ -72,18 +96,30 @@ namespace QuestsA
             return inventario_.temecItem(a, quantidade);
 
         }
-        public bool completouQuestMonstros(DerrotarMonstro a, int b, gQuest c)
+        public bool completouQuestMonstros(gQuest c)
         {
-            if (c.quantidadeInicial == 0)
-            {
-                c.quantidadeInicial = monstros.Find(x => x.monstro == a).quantidade;
-            }
 
-            if (monstros.Find(x => x.monstro == a).quantidade >= c.quantidadeInicial + b)
+            bool aux_ = true;
+         for(int x= 0; x < c.quantidadeInicial.Count; x++)
             {
-                return true;
+                float valorA = monstr.Find(y => y == c.quantidadeInicial[x].monstro).quantidade; // quantidade total de monstros mortos
+                float valorB = c.quest_.problema.monstros.Find(j => j.mosntro == c.quantidadeInicial[x].monstro).quantidade;// quantidade necessaria
+                float valorC = c.quantidadeInicial[x].quantidadeAtual;// quantos tinha quando iniciou a quest
+                Debug.Log(valorA + "  " + valorB + "  " + valorC);
+                if (valorA>=
+                  valorB+valorC)
+                {
+                 
+                }
+                else
+                {
+                    aux_ = false;
+                    break;
+
+                }
             }
-            return false;
+          
+            return aux_;
         }
         public bool completouQuest(gQuest a)
         {
@@ -95,14 +131,9 @@ namespace QuestsA
                     break;
             }
             Qitem = a.quest_.problema.itens.Count == 0 ? true : Qitem;
-            bool Qmonstro = false;
-            foreach (var aux in a.quest_.problema.monstros)
-            {
-                Qmonstro = completouQuestMonstros(aux.mosntro, aux.quantidade, a);
-                if (Qmonstro == false)
-                    break;
-            }
-            Qmonstro = a.quest_.problema.monstros.Count == 0 ? true : Qmonstro;
+          
+              bool  Qmonstro = completouQuestMonstros(a);
+           
             return Qitem ? Qmonstro ? true : false : false;
         }
         float aux;
@@ -123,7 +154,7 @@ namespace QuestsA
                 QuestsCompletas.AddRange(aux__);
                 ListaQuests.RemoveAll(x => aux__.Contains(x));
             }
-            if (jq.listaClicks != null)
+            if (jq.listaClicks != null) 
             {
                 if (jq.listaClicks.Count > 0)
                 {
