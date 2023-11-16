@@ -24,6 +24,8 @@ namespace montros
             public MovimentacaoAEstrela movimento;
             public GerenciadorDeAtaques atk;
             public GerenciadoDeVida alvo;
+            public GerenciadoDeAnimação anima;
+            public bool EmAlerta;
 
             public unidade()
             {
@@ -39,46 +41,43 @@ namespace montros
                 {
                     movimento = aux.GetComponent<MovimentacaoAEstrela>();
                     atk = aux.GetComponent<GerenciadorDeAtaques>();
+                    anima = aux.GetComponent<GerenciadoDeAnimação>();
                 }
                 catch { }
             }
 
             public void mover()
             {
-                if (alvo == null) {
-                    movimento.movimentarParaS((posicao));
-                }
-                else
-                {
-                  
-                        movimento.movimentarParaS((posicao * atk.distancia) + alvo.transform.position);
-                        movimento.transform.localRotation = Quaternion.LookRotation(alvo.transform.position - movimento.transform.position);
 
-                        if (movimento.chegou)
-                        {
-                            atk.atacar(alvo);
-                        }
-                    
-                }
+                anima.executar(posicao, movimento, atk, alvo,EmAlerta);
+
+               
             }
         }
         public GerenciadoDeVida alvo;
-         float distancia;
-        bool flag_ = false;
-
+        
+       
+        bool flag_alerta;
         private void Start()
         {
-           
-            Vector3 aux = transform.position;
-            aux.y = 0;
-          //  transform.position = aux;
+            if (frontLine.Count <= 0)
+            {
+                Vector3 aux = transform.position;
+                aux.y = 0;
+                //  transform.position = aux;
 
-            for(int x = 0; x < lista.Count; x++) { 
-            for(int y=0; y < lista[x].quantidade; y++)
+                for (int x = 0; x < lista.Count; x++)
                 {
-                    GameObject aux_ = Instantiate(lista[x].modelo, transform.position, Quaternion.identity,transform);
-                    frontLine.Add(new unidade(aux_));
+                    for (int y = 0; y < lista[x].quantidade; y++)
+                    {
+                        GameObject aux_ = Instantiate(lista[x].modelo, transform.position, Quaternion.identity, transform);
+                        frontLine.Add(new unidade(aux_));
+                    }
                 }
+            }
+            if (!alvo)
+            {
+                Debug.LogError("faltou definir o lavo");
             }
          
         }
@@ -86,12 +85,11 @@ namespace montros
         private void Update()
         {
             frontLine.RemoveAll(x => x.movimento == null);
-            if (Vector3.Distance(transform.position, alvo.transform.position) < distanciaDaMatilha *10 || flag_ )
+            if (Vector3.Distance(transform.position, alvo.transform.position) < distanciaDaMatilha *10  )
             {
                 if (frontLine.Count > 0)
                 {
-                    flag_ = true;
-                    distancia = frontLine.Count;
+                    
                     int inicialFront = 1;
                     int quantidadePorLado = (int)(frontLine.Count / 2);
 
@@ -135,8 +133,11 @@ namespace montros
 
                     frontLine.ForEach(x => x.mover());
 
-
-
+                    if (!flag_alerta)
+                    {
+                        frontLine.ForEach(x => x.EmAlerta = true);
+                    }
+                    flag_alerta = true;
                 }
             }
             else
@@ -146,6 +147,11 @@ namespace montros
                     frontLine.ForEach(x => x.posicao = new Vector3(Random.Range(-distanciaDaMatilha, distanciaDaMatilha),
                          0, Random.Range(-distanciaDaMatilha, distanciaDaMatilha)));
 
+                if (flag_alerta)
+                {
+                    frontLine.ForEach(x => x.EmAlerta = false);
+                    flag_alerta = false;
+                }
                 frontLine.ForEach(x => x.alvo = null);
                 frontLine.ForEach(x => x.mover());
 

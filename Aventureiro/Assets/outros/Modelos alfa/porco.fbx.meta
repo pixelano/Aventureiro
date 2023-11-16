@@ -1,0 +1,584 @@
+fileFormatVersion: 2
+guid: 7ae677a5ee531a94abc9f8acdee4fa21
+ModelImporter:
+  serializedVersion: 21300
+  internalIDToNameTable: []
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 1
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: acordando
+      takeName: "Arma\xE7\xE3o|Arma\xE7\xE3oAction"
+      internalID: 6721458310439393509
+      firstFrame: 0
+      lastFrame: 22
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: sentando
+      takeName: "Arma\xE7\xE3o|Arma\xE7\xE3oAction"
+      internalID: -7747997388073831756
+      firstFrame: 22
+      lastFrame: 50
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: sentado esperando
+      takeName: "Arma\xE7\xE3o|Arma\xE7\xE3oAction"
+      internalID: 2404524705271653459
+      firstFrame: 50
+      lastFrame: 120
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: levantando
+      takeName: "Arma\xE7\xE3o|Arma\xE7\xE3oAction"
+      internalID: 1450529412651513299
+      firstFrame: 120
+      lastFrame: 150
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: preparar correr
+      takeName: "Arma\xE7\xE3o|Arma\xE7\xE3oAction"
+      internalID: -3505199184563765569
+      firstFrame: 150
+      lastFrame: 160
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: correr
+      takeName: "Arma\xE7\xE3o|Arma\xE7\xE3oAction"
+      internalID: 6137699875055404194
+      firstFrame: 160
+      lastFrame: 180
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: correr X caminhar
+      takeName: "Arma\xE7\xE3o|Arma\xE7\xE3oAction"
+      internalID: -4570323627059363546
+      firstFrame: 180
+      lastFrame: 185
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: caminhar
+      takeName: "Arma\xE7\xE3o|Arma\xE7\xE3oAction"
+      internalID: -6662334788364725806
+      firstFrame: 185
+      lastFrame: 218
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: preparar atacar
+      takeName: "Arma\xE7\xE3o|Arma\xE7\xE3oAction"
+      internalID: -7995535301207288686
+      firstFrame: 218
+      lastFrame: 230
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: atacar
+      takeName: "Arma\xE7\xE3o|Arma\xE7\xE3oAction"
+      internalID: -1948956964545158856
+      firstFrame: 230
+      lastFrame: 250
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: paradoempe
+      takeName: "Arma\xE7\xE3o|Arma\xE7\xE3oAction"
+      internalID: 1765137219361235410
+      firstFrame: 150
+      lastFrame: 151
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: parado correndo
+      takeName: "Arma\xE7\xE3o|Arma\xE7\xE3oAction"
+      internalID: -8206711345986809168
+      firstFrame: 160
+      lastFrame: 161
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.25
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 0
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton:
+    - name: porco(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: raaasadad23
+      parentName: porco(Clone)
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: "Arma\xE7\xE3o"
+      parentName: porco(Clone)
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: -4.3297806e-17, y: 0.7071068, z: 0.7071067, w: -4.32978e-17}
+      scale: {x: 100, y: 100, z: 100}
+    - name: pivo
+      parentName: "Arma\xE7\xE3o"
+      position: {x: -6.661338e-18, y: -0.0087875035, z: 0.0024136237}
+      rotation: {x: 0.377324, y: 0.59801894, z: 0.37732404, w: 0.5980189}
+      scale: {x: 1, y: 1, z: 1}
+    - name: rabo
+      parentName: pivo
+      position: {x: 3.4851837e-11, y: 0.002603909, z: -2.4589706e-18}
+      rotation: {x: 0.18410407, y: -0.63686407, z: 0.17659687, w: 0.72754616}
+      scale: {x: 1, y: 1, z: 1}
+    - name: coluna
+      parentName: rabo
+      position: {x: 1.8626451e-11, y: 0.004290899, z: 1.8626451e-11}
+      rotation: {x: -0.2755967, y: -0.0686908, z: 0.007785379, w: 0.9587844}
+      scale: {x: 1, y: 1.0000001, z: 1.0000001}
+    - name: cabeca
+      parentName: coluna
+      position: {x: -1.8626451e-11, y: 0.004536839, z: -5.267793e-10}
+      rotation: {x: -0.05463523, y: -0.037925225, z: 0.05863028, w: 0.99606186}
+      scale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
+    - name: cabeca_end
+      parentName: cabeca
+      position: {x: 0, y: 0.0035435597, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: dianteira direita A
+      parentName: coluna
+      position: {x: -1.8626451e-11, y: 0.004536839, z: -5.267793e-10}
+      rotation: {x: 0.7023699, y: -0.5098497, z: -0.3009711, w: -0.39515343}
+      scale: {x: 0.9999999, y: 0.9999998, z: 0.9999999}
+    - name: dianteira direita  B
+      parentName: dianteira direita A
+      position: {x: -1.4901161e-10, y: 0.0024564855, z: -1.3969838e-11}
+      rotation: {x: 0.09055546, y: -0.48246384, z: 0.13286568, w: 0.8610315}
+      scale: {x: 0.99999994, y: 1, z: 0.99999994}
+    - name: dianteira direita  C
+      parentName: dianteira direita  B
+      position: {x: -2.9802322e-10, y: 0.003403587, z: 3.7252902e-11}
+      rotation: {x: 0.008073559, y: 0.0037317863, z: -0.032808054, w: 0.99942213}
+      scale: {x: 1, y: 1.0000002, z: 1}
+    - name: dianteira direita  C_end
+      parentName: dianteira direita  C
+      position: {x: 0, y: 0.0017958764, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: dianteira esquerda A
+      parentName: coluna
+      position: {x: -1.8626451e-11, y: 0.004536839, z: -5.267793e-10}
+      rotation: {x: 0.031475876, y: 0.79218537, z: 0.37269548, w: -0.48223412}
+      scale: {x: 1.0000001, y: 1, z: 1}
+    - name: dianteira esquerda B
+      parentName: dianteira esquerda A
+      position: {x: -2.2351741e-10, y: 0.0022533264, z: -1.6763806e-10}
+      rotation: {x: 0.7695654, y: 0.16588636, z: 0.21741919, w: 0.57704395}
+      scale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
+    - name: dianteira esquerda C
+      parentName: dianteira esquerda B
+      position: {x: 1.6763806e-10, y: 0.0035529756, z: 7.4505804e-11}
+      rotation: {x: -0.056930825, y: -0.01632259, z: 0.07240113, w: 0.99561566}
+      scale: {x: 0.99999994, y: 0.9999999, z: 1}
+    - name: dianteira esquerda C_end
+      parentName: dianteira esquerda C
+      position: {x: 0, y: 0.0018516219, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: 'traseira Direita A '
+      parentName: rabo
+      position: {x: 1.8626451e-11, y: 0.004290899, z: 1.8626451e-11}
+      rotation: {x: 0.8935257, y: -0.25539565, z: -0.103838, w: -0.35440463}
+      scale: {x: 1.0000001, y: 1, z: 1}
+    - name: traseira Direita B
+      parentName: 'traseira Direita A '
+      position: {x: 2.6077032e-10, y: 0.0037606934, z: 2.4214386e-10}
+      rotation: {x: 0.650101, y: -0.46341997, z: -0.23052199, w: 0.55630046}
+      scale: {x: 0.99999994, y: 0.99999994, z: 0.9999999}
+    - name: traseira Direita C
+      parentName: traseira Direita B
+      position: {x: 3.5390257e-10, y: 0.003291393, z: -1.816079e-10}
+      rotation: {x: 0.003610575, y: -0.2248236, z: -0.17087257, w: 0.9592934}
+      scale: {x: 1, y: 1.0000001, z: 1}
+    - name: traseira Direita C_end
+      parentName: traseira Direita C
+      position: {x: 0, y: 0.002419393, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: traseira Esquerda A
+      parentName: rabo
+      position: {x: 1.8626451e-11, y: 0.004290899, z: 1.8626451e-11}
+      rotation: {x: 0.89532137, y: 0.22891665, z: 0.118678555, w: -0.36319727}
+      scale: {x: 1.0000002, y: 1.0000001, z: 1.0000002}
+    - name: traseira Esquerda B
+      parentName: traseira Esquerda A
+      position: {x: 1.4901161e-10, y: 0.0037883553, z: 2.5262123e-10}
+      rotation: {x: 0.73894316, y: 0.39213356, z: 0.07281866, w: 0.5430394}
+      scale: {x: 0.99999994, y: 1, z: 1}
+    - name: traseira Esquerda C
+      parentName: traseira Esquerda B
+      position: {x: 2.0489097e-10, y: 0.0030752039, z: 6.519258e-11}
+      rotation: {x: -0.07735365, y: 0.0033507717, z: -0.0015380098, w: 0.99699694}
+      scale: {x: 1, y: 1, z: 1.0000001}
+    - name: traseira Esquerda C_end
+      parentName: traseira Esquerda C
+      position: {x: 0, y: 0.0026271017, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: rabo rabo
+      parentName: rabo
+      position: {x: 1.8626451e-11, y: 0.004290899, z: 1.8626451e-11}
+      rotation: {x: -0.42335248, y: 0.17597286, z: 0.884281, w: -0.08861942}
+      scale: {x: 1.0000001, y: 0.9999999, z: 0.99999875}
+    - name: rabo rabo_end
+      parentName: rabo rabo
+      position: {x: 0, y: 0.0038958208, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 0.25
+    rootMotionBoneName: pivo
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

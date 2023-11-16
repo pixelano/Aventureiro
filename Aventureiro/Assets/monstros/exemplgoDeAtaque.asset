@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: exemplgoDeAtaque
   m_EditorClassIdentifier: 
   tempoDeRecarga: 2
-  distanciaAtaque: 5
+  distanciaAtaque: 3
   tempoDeCast: 3
   dano: 1

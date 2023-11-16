@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Ageral;
+using PlasticGui.WorkspaceWindow.Replication;
 
 namespace montros
 {
@@ -14,25 +15,27 @@ namespace montros
         SAtaques ataqueAtual;
         float ultimoAtaque;
         public bool liberado;
+       
         public void Awake()
         {
             distancia_ = distancia;
             distancia = lista[0].distanciaAtaque;
-          
+         
             ataqueAtual = lista[0];
+          
+            Vector3 aa = GetComponentInChildren<BoxCollider>().size;
+         
         }
 
-        private void Update()
-        {
-           
-        }
+      
         public bool podeAtacar()
         {
             bool resposta = false;
 
-           
-             
-                if (distancia <= ataqueAtual.distanciaAtaque)
+
+            float aux_f = Vector3.Distance(transform.position, alvo.transform.position);
+            Debug.Log(aux_f);
+                if (aux_f <= ataqueAtual.distanciaAtaque + 0.6f)
                 {
                     resposta = true;
                    
@@ -43,44 +46,52 @@ namespace montros
 
             return resposta ;
         }
-        float tempoDeCast=0;
+       
+        public bool atacando;
 public void executarAtaque()
         {
-            if (tempoDeCast >  ataqueAtual.tempoDeCast) {
-            
+
            
-                tempoDeCast = 0;
+           
                 ultimoAtaque = Time.time;
                 ataqueAtual = null;
                 SortearAtaque();
-
+                atacando = false;
                 alvo.diminuirVida(ataqueAtual.dano);
-            }
-            else
-            {
-                tempoDeCast += Time.deltaTime;
-            }
+                distancia = distancia_;
+          
         }
         GerenciadoDeVida alvo;
-        public void atacar(GerenciadoDeVida alvo_)
+        public bool aux_caminhando;
+        bool flag_;
+        public bool atacar(GerenciadoDeVida alvo_)
         {
             alvo = alvo_;
           
 
-            if (Time.time > ultimoAtaque + ataqueAtual.tempoDeRecarga)
+            if ( Time.time > ultimoAtaque + ataqueAtual.tempoDeRecarga)
             {
-                distancia = ataqueAtual.distanciaAtaque;
                 if (podeAtacar())
                 {
-                    executarAtaque();
+                    atacando = true;
 
+                    // executarAtaque();
+                    return true;
 
                 }
+
+                aux_caminhando = false;
+                atacando = false;
+                distancia = 1;
+              
+
             }
             else
             {
+                atacando = false;
                 distancia = distancia_;
             }
+            return false;
         }
         public void SortearAtaque()
         {if (ataqueAtual == null)

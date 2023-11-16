@@ -7,7 +7,7 @@ namespace montros
 {
     public class MovimentacaoAEstrela : MonoBehaviour
     {
-        public Terrain terreno;
+        public Terrain terreno; 
         public GameObject terreno_;
         public Vector3 target, target_;
 
@@ -16,7 +16,7 @@ namespace montros
         public List<Vector3> aaa = new List<Vector3>();
         [HideInInspector]
         public List<Vector3> abbb = new List<Vector3>();
-        Vector3 rota;
+        public Vector3 rota;
 
 
         public float distanciaMaximaASePercorrer;
@@ -28,8 +28,10 @@ namespace montros
 
         public LayerMask layersColisores;
         public int MaximoDeNodes;
-        public float velocidade;
-        public float distanciaParaDiminuirVelocidade;
+        public bool correndo,caminhando_;
+        public float velocidade,bonus_corrida= 2,DistanciaParaCorrer = 8;
+        public float distanciaParaDiminuirVelocidade,distandiaDoAlvo;
+
 
         void Start()
         {
@@ -76,15 +78,18 @@ namespace montros
             }
         }
         public void movimentarParaS(Vector3 a){
+           
             if (a != target_)
             {
-                if (caminho.Count <= 0)
+                if (Vector3.Distance(a,target_) > escala) 
                 {
                     target = a;
+                    target.y = transform.position.y;
                     target_ = a;
                     calcularRota_b = true;
                 }
             }
+      
         }
         public void movimentarPara(Vector3 a)
         {
@@ -106,8 +111,17 @@ namespace montros
 
                 try
                 {
-                    caminho = OptimizePath(converterParaVetor(calcularRota(target,layersColisores)));
+                    List<node> aux_c = calcularRota(target, layersColisores);
+                    if (aux_c.Count == 1) {
+                        caminho = (converterParaVetor(aux_c));
+                    }
+                    else
+                    {
 
+
+                   
+                    caminho = OptimizePath(converterParaVetor(aux_c));
+                    }
                     rota = caminho[0];
                     calcularRota_b = false;
                 }
@@ -122,8 +136,14 @@ namespace montros
                 aaa.Clear();
                 abbb.Clear();
             }
-auxVelocidade =Mathf.Lerp(auxVelocidade,(  Vector3.Distance(transform.position,target) <= distanciaParaDiminuirVelocidade ? 2 : velocidade),
+            distandiaDoAlvo = Vector3.Distance(transform.position, target);
+            correndo = distandiaDoAlvo > DistanciaParaCorrer;
+auxVelocidade =Mathf.Lerp(auxVelocidade,(distandiaDoAlvo <= distanciaParaDiminuirVelocidade ? 2 : velocidade),
     0.5f);
+            caminhando_ = caminho.Count == 0 ? false : distandiaDoAlvo <= 1 ? false : true;
+            if (correndo)
+                auxVelocidade *= bonus_corrida;
+
             if (caminho.Count >0)
             {
                 rota = attNode();

@@ -32,6 +32,7 @@ namespace QuestsA
             public DerrotarMonstro monstro;
             public int quantidade,quantidadeAtual;
         }
+      
         private void Start()
         {
         monstr = salvarListaMonstros.monstr;
@@ -105,7 +106,7 @@ namespace QuestsA
                 float valorA = monstr.Find(y => y == c.quantidadeInicial[x].monstro).quantidade; // quantidade total de monstros mortos
                 float valorB = c.quest_.problema.monstros.Find(j => j.mosntro == c.quantidadeInicial[x].monstro).quantidade;// quantidade necessaria
                 float valorC = c.quantidadeInicial[x].quantidadeAtual;// quantos tinha quando iniciou a quest
-                Debug.Log(valorA + "  " + valorB + "  " + valorC);
+                
                 if (valorA>=
                   valorB+valorC)
                 {

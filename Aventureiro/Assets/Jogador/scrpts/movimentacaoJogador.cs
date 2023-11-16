@@ -19,6 +19,7 @@ namespace JogadorA
         public float PuloMaximo,MultiplicadorDePulo;
         float aux_pulo;
         bool flag_pulo;
+
         void Update()
         {
             // Obtém entrada do jogador para movimento
