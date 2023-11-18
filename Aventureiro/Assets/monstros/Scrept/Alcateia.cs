@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Ageral;
+using UnityEngine.Animations;
 namespace montros
 {
     public class Alcateia : MonoBehaviour
@@ -25,6 +26,7 @@ namespace montros
             public GerenciadorDeAtaques atk;
             public GerenciadoDeVida alvo;
             public GerenciadoDeAnimação anima;
+         
             public bool EmAlerta;
 
             public unidade()
@@ -42,21 +44,25 @@ namespace montros
                     movimento = aux.GetComponent<MovimentacaoAEstrela>();
                     atk = aux.GetComponent<GerenciadorDeAtaques>();
                     anima = aux.GetComponent<GerenciadoDeAnimação>();
+                 
+                
+
+                    
                 }
                 catch { }
             }
 
             public void mover()
             {
-
+                
                 anima.executar(posicao, movimento, atk, alvo,EmAlerta);
 
                
             }
         }
         public GerenciadoDeVida alvo;
-        
-       
+        public CriadorDeAreas cra;
+
         bool flag_alerta;
         private void Start()
         {
@@ -79,6 +85,7 @@ namespace montros
             {
                 Debug.LogError("faltou definir o lavo");
             }
+
          
         }
         public float distanciaDaMatilha;
@@ -142,11 +149,9 @@ namespace montros
             }
             else
             {
-               
 
-                    frontLine.ForEach(x => x.posicao = new Vector3(Random.Range(-distanciaDaMatilha, distanciaDaMatilha),
-                         0, Random.Range(-distanciaDaMatilha, distanciaDaMatilha)));
 
+                frontLine.ForEach(x => x.posicao = ManipulacaoDeMalha.GetRandomPositionInMesh(cra.mesh));
                 if (flag_alerta)
                 {
                     frontLine.ForEach(x => x.EmAlerta = false);

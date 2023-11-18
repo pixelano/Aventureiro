@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Ageral;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace montros
 {
@@ -29,20 +31,32 @@ namespace montros
         public LayerMask layersColisores;
         public int MaximoDeNodes;
         public bool correndo,caminhando_;
-        public float velocidade,bonus_corrida= 2,DistanciaParaCorrer = 8;
+        public float bonus_corrida= 2,DistanciaParaCorrer = 8;
         public float distanciaParaDiminuirVelocidade,distandiaDoAlvo;
 
+        private CharacterController controller;
 
+       
         void Start()
         {
+            controller = GetComponent<CharacterController>();
             RaycastHit hit;
             Physics.Raycast(transform.position,-transform.up,out hit);
-            if(hit.collider.GetComponent<Terrain>()){
-            terreno = terreno == null ? FindAnyObjectByType<Terrain>() : terreno;
-            }else if(hit.collider){
-                terreno_ = hit.collider.gameObject;
-            }else{
-                Debug.LogError(transform.name+ "    "+ transform.position + "   não encontrou um chão");
+            if (hit.collider)
+            {
+                if (hit.collider.GetComponent<Terrain>())
+                {
+                    terreno = terreno == null ? FindAnyObjectByType<Terrain>() : terreno;
+                }
+                else
+                {
+                    terreno_ = hit.collider.gameObject;
+                }
+            }
+          
+            else
+            {
+                Debug.LogError(transform.name + "    " + transform.position + "   não encontrou um chão");
             }
            
             distanciaMaximaASePercorrer = distanciaMaximaASePercorrer <=0 ? 100 : distanciaMaximaASePercorrer;
@@ -53,7 +67,7 @@ namespace montros
                 Debug.LogError(" não foi atribuido o layer dos colisores");
             }
             MaximoDeNodes = MaximoDeNodes < 10 ?90 :MaximoDeNodes;
-            velocidade = velocidade <= 0 ? 4:velocidade;
+         
             distanciaParaDiminuirVelocidade = distanciaParaDiminuirVelocidade < 1 ? 4 : distanciaParaDiminuirVelocidade;
 
 
@@ -138,7 +152,7 @@ namespace montros
             }
             distandiaDoAlvo = Vector3.Distance(transform.position, target);
             correndo = distandiaDoAlvo > DistanciaParaCorrer;
-auxVelocidade =Mathf.Lerp(auxVelocidade,(distandiaDoAlvo <= distanciaParaDiminuirVelocidade ? 2 : velocidade),
+auxVelocidade =Mathf.Lerp(auxVelocidade,(distandiaDoAlvo <= distanciaParaDiminuirVelocidade ? ValoresUniversais.VelocidadeDeCaminhadaPortePequeno : ValoresUniversais.VelocidadeDeCaminhadaPortePequeno),
     0.5f);
             caminhando_ = caminho.Count == 0 ? false : distandiaDoAlvo <= 1 ? false : true;
             if (correndo)
@@ -149,13 +163,19 @@ auxVelocidade =Mathf.Lerp(auxVelocidade,(distandiaDoAlvo <= distanciaParaDiminui
                 rota = attNode();
                 if (rota != null)
                 {
-                        transform.position = AjustarAlturaChaoS(Vector3.Lerp(transform.position, (Vector3.Normalize(rota - transform.position) * auxVelocidade) + transform.position, Time.deltaTime));
-               
+                      //  transform.position = AjustarAlturaChaoS(                            Vector3.Lerp(                                transform.position, (                                Vector3.Normalize(rota - transform.position) * auxVelocidade) + transform.position, Time.deltaTime));
+                    Vector3 moveDirection = Vector3.Normalize(rota - transform.position) * auxVelocidade;
+                    moveDirection.y -= ValoresUniversais.gravidade;
+                    controller.Move(moveDirection * Time.deltaTime);
                 }
             }
             else
             {
-                transform.position = AjustarAlturaChaoS(transform.position);
+                // transform.position = AjustarAlturaChaoS(transform.position);
+
+                Vector3 moveDirection = Vector3.zero;
+                moveDirection.y -= ValoresUniversais.gravidade;
+                controller.Move(moveDirection * Time.deltaTime);
             }
 
             if(caminho.Count <= 1)

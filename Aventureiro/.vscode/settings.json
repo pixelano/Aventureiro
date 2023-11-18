@@ -51,5 +51,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Aventureiro.sln"
+    "dotnet.defaultSolution": "Aventureiro.sln",
+    "dotnet.preferCSharpExtension": true
 }

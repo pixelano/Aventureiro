@@ -8,13 +8,12 @@ namespace JogadorA
     public class movimentacaoJogador : MonoBehaviour
     {
       
-        private CharacterController controller; // Referência ao CharacterController
+        private CharacterController controller; 
 
         void Start()
         {
-        //    Cursor.visible = true;
-          //  Cursor.lockState = CursorLockMode.Locked;
-            controller = GetComponent<CharacterController>(); // Obtém a referência do CharacterController no objeto
+      
+            controller = GetComponent<CharacterController>(); 
         }
         public float PuloMaximo,MultiplicadorDePulo;
         float aux_pulo;

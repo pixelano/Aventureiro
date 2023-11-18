@@ -23,7 +23,6 @@ namespace montros
          
             ataqueAtual = lista[0];
           
-            Vector3 aa = GetComponentInChildren<BoxCollider>().size;
          
         }
 

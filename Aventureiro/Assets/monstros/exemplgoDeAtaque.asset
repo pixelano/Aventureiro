@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8642eaee72f66049864bb5573ddfe30, type: 3}
   m_Name: exemplgoDeAtaque
   m_EditorClassIdentifier: 
-  tempoDeRecarga: 2
+  tempoDeRecarga: 5
   distanciaAtaque: 3
-  tempoDeCast: 3
+  tempoDeCast: 10
   dano: 1

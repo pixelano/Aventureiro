@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 5256548989377109161}
   - component: {fileID: -8469201738897317774}
   - component: {fileID: 7931414190590717920}
+  - component: {fileID: 667458278}
+  - component: {fileID: 5489332573439348397}
   m_Layer: 6
   m_Name: monstro porco
   m_TagString: Untagged
@@ -55,19 +57,21 @@ MonoBehaviour:
   caminho: []
   aaa: []
   abbb: []
+  rota: {x: 0, y: 0, z: 0}
   distanciaMaximaASePercorrer: 0
   alturaDoRaycast: 0
   distanciaVisao: 0
   escala: 0
   layersColisores:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 72
   MaximoDeNodes: 0
   correndo: 0
-  velocidade: 0
-  bonus_corrida: 2
-  DistanciaParaCorrer: 8
+  caminhando_: 0
+  bonus_corrida: 1.1
+  DistanciaParaCorrer: 5
   distanciaParaDiminuirVelocidade: 4.62
+  distandiaDoAlvo: 0
   chegou: 0
 --- !u!114 &5256548989377109161
 MonoBehaviour:
@@ -81,7 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9b1016e3f3acc44f9f3505cd10703dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distancia: 10
+  distancia: 5
   lista:
   - {fileID: 11400000, guid: 1c253f28925004d409fda554a18c89eb, type: 2}
   liberado: 0
@@ -115,6 +119,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DM: {fileID: 11400000, guid: 1481d17a7e89f424793294d1855d600c, type: 2}
+--- !u!114 &667458278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5256548989377109164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 821a8cfc1da540e4ebf05b6ddb1cf1a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tempoParaDescansar: 5
+  animador: {fileID: 8652246492176309214}
+  aux_x: 0.95
+  lkc: {fileID: 1200774418900911158}
+  tolerancia: 5
+--- !u!143 &5489332573439348397
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5256548989377109164}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 3.25
+  m_Radius: 0.49
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1 &5256548991081735314
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,7 +164,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5256548991081735325}
   - component: {fileID: 5256548991081735326}
-  - component: {fileID: 5256548991081735324}
   - component: {fileID: 2049095943}
   m_Layer: 6
   m_Name: corpo
@@ -142,7 +180,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5256548991081735314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.37, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1.6337}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -158,19 +196,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5256548991081735314}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &5256548991081735324
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5256548991081735314}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.86, y: 2, z: 3.57}
-  m_Center: {x: 0, y: 0.89, z: 0}
 --- !u!114 &2049095943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,6 +264,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: porco
       objectReference: {fileID: 0}
+    - target: {fileID: 2342082705277519342, guid: 7ae677a5ee531a94abc9f8acdee4fa21, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2342082705277519342, guid: 7ae677a5ee531a94abc9f8acdee4fa21, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2342082705277519342, guid: 7ae677a5ee531a94abc9f8acdee4fa21, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2342082705277519342, guid: 7ae677a5ee531a94abc9f8acdee4fa21, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 7ae677a5ee531a94abc9f8acdee4fa21, type: 3}
       propertyPath: m_Controller
       value: 
@@ -248,5 +289,34 @@ PrefabInstance:
 --- !u!4 &3383004328707228068 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7ae677a5ee531a94abc9f8acdee4fa21, type: 3}
+  m_PrefabInstance: {fileID: 2988246096990004815}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4120441495869332352 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1177372769388297679, guid: 7ae677a5ee531a94abc9f8acdee4fa21, type: 3}
+  m_PrefabInstance: {fileID: 2988246096990004815}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1183024399 &1200774418900911158
+LookAtConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4120441495869332352}
+  m_Enabled: 1
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 81.34, y: 0, z: 0}
+  m_Roll: 180
+  m_WorldUpObject: {fileID: 0}
+  m_UseUpObject: 0
+  m_IsContraintActive: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
+--- !u!95 &8652246492176309214 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 7ae677a5ee531a94abc9f8acdee4fa21, type: 3}
   m_PrefabInstance: {fileID: 2988246096990004815}
   m_PrefabAsset: {fileID: 0}
