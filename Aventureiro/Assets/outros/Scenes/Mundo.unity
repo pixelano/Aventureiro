@@ -304,21 +304,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68d38a8d68723542ab2716d273b8e0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terreno: {fileID: 0}
+  terreno: {fileID: 276713176}
   config:
     tamanhoMaximoDeArea: 41.18
     amplitude: 18.7
     frequencia: 7.3
-    tolerancia: 0.83
+    tolerancia: 0.9
     escala: 1
-  pontos_: []
   cc: []
   executar: 1
-  guizmos: 0
-  somentePontos: 0
+  guizmos: 1
+  somentePontos: 1
   renderMalha: 1
   trl: {fileID: 469119677}
   mesh: {fileID: 0}
+  pontos_: []
   triangulos_: []
 --- !u!114 &469119679
 MonoBehaviour:
@@ -347,7 +347,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 469119676}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 54.1, y: 15.1, z: 48.5}
+  m_LocalPosition: {x: 52.4, y: 15.1, z: 46.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -408,6 +408,10 @@ PrefabInstance:
     - target: {fileID: 2778191036805561996, guid: 95cda6ec39ab924428c044c7d12c0cda, type: 3}
       propertyPath: m_Name
       value: jogador
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778191036805561996, guid: 95cda6ec39ab924428c044c7d12c0cda, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95cda6ec39ab924428c044c7d12c0cda, type: 3}

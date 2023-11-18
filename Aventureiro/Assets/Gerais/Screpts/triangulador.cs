@@ -116,43 +116,44 @@ public class triangulador : MonoBehaviour
                    }
                }
            }
-           for(int c = 0; c < pontos.Count; c++)
+
+            foreach (Ponto a in pontos)
             {
-                Ponto a = pontos[c];
-                for(int z = 0; z < pontos[c].conexoes.Count;z++)
+                foreach (Ponto b in a.conexoes)
                 {
-                    Ponto b = pontos[c].conexoes[z];
                     if (!b.conexoes.Contains(a))
                     {
                         b.conexoes.Add(a);
                     }
                 }
             }
-           
 
 
-           for(int z = 0; z < pontos.Count; z++)
+            Debug.Log(pontos[0].conexoes.Count);
+            foreach (Ponto a in pontos)
             {
-                Ponto a = pontos[z];
-                for(int x = 0; x < pontos[z].conexoes.Count; x++)
+
+                foreach (Ponto b in a.conexoes)
                 {
-                    Ponto b = pontos[z].conexoes[x];
-                    for(int v = 0; v < pontos.Count; v++)
+                    // de A para B
+
+                    foreach (Ponto C in pontos)
                     {
-                        Ponto C = pontos[v];
                         if (C == a || C == b)
                             continue;
+                      
+                            if (!LinhasCruzam(a.posicao,b.posicao, a.posicao, C.posicao))
+                            {
+                                a.conexoes.Add(C);
+                                C.conexoes.Add(a);
 
-                        if (!LinhasCruzam(a.posicao, b.posicao, a.posicao, C.posicao))
-                        {
-                            a.conexoes.Add(C);
-                            C.conexoes.Add(a);
+                            }
 
-                        }
+                       
                     }
+
                 }
             }
-        
 
           
             // Criar triângulos
@@ -224,7 +225,7 @@ public class triangulador : MonoBehaviour
             }
                     return lf;
         }
-       static bool temigual(Triangulo a , List<Triangulo> b)
+       bool temigual(Triangulo a , List<Triangulo> b)
         {
 
             Ponto A0 = a.pontos[0];

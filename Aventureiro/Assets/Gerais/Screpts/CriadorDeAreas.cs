@@ -36,7 +36,7 @@ namespace Ageral
 
                 Vector3 pivo_ = Vector3.zero;
                 List<Vector3> pp = new List<Vector3>();
-                float max_x = 0, min_x = 0, max_y = 0, min_y = 0;
+                float max_x = 0, max_y = 0;
                 for (int x = 0; x < config.tamanhoMaximoDeArea; x++)
                 {
                     for (int z = 0; z < config.tamanhoMaximoDeArea; z++)
@@ -59,20 +59,19 @@ namespace Ageral
                         }
                     }
                 }
-                Vector3 media = new Vector3(max_x / 2, 0, max_y / 2);
-                float dist = Vector3.Distance(media, transform.position);
-                Vector3 correc = transform.position - media;
-                correc *= dist / 3;
+                Vector3 media = new Vector3(config.tamanhoMaximoDeArea / 2, 0, config.tamanhoMaximoDeArea / 2);
+               
                 for (int x = 0; x < pp.Count; x++)
                 {
-                    pp[x] -= correc;
-                    pp[x] += transform.position;
+                    pp[x] -= media;
+                  
                 }
                 pontos_ = pp;
                 triangulos_ = trl.triangular(pp);
 
 
                 CriarMalhaAPartirDeVertices(triangulos_);
+
            
             }
 
@@ -81,7 +80,7 @@ namespace Ageral
        
             
             }
-
+        
         
         public Mesh mesh;
 

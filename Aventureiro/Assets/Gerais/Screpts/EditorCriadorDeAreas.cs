@@ -33,7 +33,7 @@ namespace Ageral
 
                         Vector3 pivo_ = Vector3.zero;//new Vector3(Random.Range(0, terreno.terrainData.size.x), 0, Random.Range(0,
                                                      //   terreno.terrainData.size.z));
-                        float max_x = 0, min_x = 0, max_y = 0, min_y = 0;
+                        float max_x = 0,  max_y = 0;
                         for (int x = 0; x < meuObjeto.config.tamanhoMaximoDeArea; x++)
                         {
                             for (int z = 0; z < meuObjeto.config.tamanhoMaximoDeArea; z++)
@@ -43,10 +43,10 @@ namespace Ageral
                                     ((pivo_.z + (z * meuObjeto.config.escala)) * meuObjeto.config.amplitude) / meuObjeto.config.frequencia) * meuObjeto.config.escala;
                                 if (pl > meuObjeto.config.tolerancia)
                                 {
-                                    Vector3 vertice_ = new Vector3(pivo_.x + (x * meuObjeto.config.escala), 0, pivo_.z + (z * meuObjeto.config.escala)) ;
+                                    Vector3 vertice_ = new Vector3(pivo_.x + (x * meuObjeto.config.escala) - meuObjeto.config.tamanhoMaximoDeArea/2, 0, pivo_.z + (z * meuObjeto.config.escala) - meuObjeto.config.tamanhoMaximoDeArea / 2) ;
                                     vertice_.y = 0;
 
-
+                                    
                                     pp.Add(vertice_);
 
                                     max_x = vertice_.x > max_x ? vertice_.x : max_x;
