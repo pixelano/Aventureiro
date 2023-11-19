@@ -46,7 +46,7 @@ namespace Ageral
                             ((pivo_.z + (z * config.escala)) * config.amplitude) / config.frequencia) * config.escala;
                         if (pl > config.tolerancia)
                         {
-                            Vector3 vertice_ = new Vector3(pivo_.x + (x * config.escala), 0, pivo_.z + (z * config.escala));
+                            Vector3 vertice_ = new Vector3(pivo_.x + (x * config.escala), 0, pivo_.z + (z * config.escala)) + transform.position;
                             vertice_.y = 0;
 
 

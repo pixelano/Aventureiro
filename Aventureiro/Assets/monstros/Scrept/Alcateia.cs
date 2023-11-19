@@ -72,7 +72,7 @@ namespace montros
   bool alvoNaArea()
         {
             
-if(meshFilter == null)
+        if(meshFilter == null)
             {
                 meshFilter = GetComponent<MeshFilter>();
             }
@@ -102,7 +102,8 @@ if(meshFilter == null)
         private void Update()
         {
             if (!aux_iniciador)
-            {if (cra.mesh != null)
+            {
+                if (cra.mesh != null)
                 {
                     aux_iniciador = true;
                     if (frontLine.Count <= 0)
@@ -115,7 +116,7 @@ if(meshFilter == null)
                         {
                             for (int y = 0; y < lista[x].quantidade; y++)
                             {
-                                GameObject aux_ = Instantiate(lista[x].modelo, ManipulacaoDeMalha.GetRandomPositionInMesh(cra.mesh) + transform.position, Quaternion.Euler(Vector3.up * Random.Range(-90,90)), transform);
+                                GameObject aux_ = Instantiate(lista[x].modelo,Vector3.Lerp( ManipulacaoDeMalha.GetRandomPositionInMesh(cra.mesh) + transform.position,transform.position,0.5f), Quaternion.Euler(Vector3.up * Random.Range(-90,90)), transform);
                                 frontLine.Add(new unidade(aux_));
                             }
                         }
@@ -152,26 +153,33 @@ if(meshFilter == null)
                         {
                             for (int y = inicialFront; y < quantidadePorLado + inicialFront; y++)
                             {
-                                float angulo = y * anguloCada * Mathf.Deg2Rad; // Convertendo o ângulo para radianos
-                                float sen = Mathf.Cos(angulo - 90);
-                                float cos = Mathf.Sin(angulo - 90);
 
-                                float offsetX = cos * x;
-                                float offsetY = sen;
-
-                                Vector3 posi = alvo.transform.TransformDirection(new Vector3(offsetX, 0, offsetY));
-
-                                posi.y = 0;
-                                try
+                                if (Vector3.Distance(frontLine[((x < 0 ? 0 : 1) * quantidadePorLado) + y].movimento.transform.position, alvo.transform.position) < 20)
                                 {
-                                    frontLine[((x < 0 ? 0 : 1) * quantidadePorLado) + y].posicao = posi;
-                                    frontLine[((x < 0 ? 0 : 1) * quantidadePorLado) + y].alvo = alvo;
-                                }
-                                catch
-                                {
-                                    frontLine[frontLine.Count - inicialFront].posicao = posi;
-                                    frontLine[frontLine.Count - inicialFront].alvo = alvo;
-                                    continue;
+
+
+                                    float angulo = y * anguloCada * Mathf.Deg2Rad; // Convertendo o ângulo para radianos
+                                    float sen = Mathf.Cos(angulo - 90);
+                                    float cos = Mathf.Sin(angulo - 90);
+
+                                    float offsetX = cos * x;
+                                    float offsetY = sen;
+
+                                    Vector3 posi = alvo.transform.TransformDirection(new Vector3(offsetX, 0, offsetY));
+
+                                    posi.y = 0;
+
+                                    try
+                                    {
+                                        frontLine[((x < 0 ? 0 : 1) * quantidadePorLado) + y].posicao = posi;
+                                        frontLine[((x < 0 ? 0 : 1) * quantidadePorLado) + y].alvo = alvo;
+                                    }
+                                    catch
+                                    {
+                                        frontLine[frontLine.Count - inicialFront].posicao = posi;
+                                        frontLine[frontLine.Count - inicialFront].alvo = alvo;
+                                        continue;
+                                    }
                                 }
                             }
                         }

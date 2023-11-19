@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
-
+using UnityEditor;
 
 namespace Ageral
 {
@@ -43,7 +43,7 @@ public class triangulador : MonoBehaviour
             List<Vector2> mapeamento = new List<Vector2>();
             foreach (Vector3 bb in vertices)
             {
-                mapeamento.Add(new Vector2(MathF.Round(bb.x), MathF.Round(bb.z)));
+                mapeamento.Add(new Vector2(MathF.Round(bb.x - transform.position.x), MathF.Round(bb.z - transform.position.z)));
             }
          
             return Triangulacao(mapeamento);
@@ -129,7 +129,7 @@ public class triangulador : MonoBehaviour
             }
 
 
-            Debug.Log(pontos[0].conexoes.Count);
+            
             foreach (Ponto a in pontos)
             {
 
@@ -211,7 +211,6 @@ public class triangulador : MonoBehaviour
                     }
                 }
             }
-            Debug.Log(tr.Count);
             ff.RemoveAll(x => tr.Contains(x));
 
             //converte os triangulos para lista de vec3
@@ -256,8 +255,7 @@ public class triangulador : MonoBehaviour
             // Adiciona a margem de tolerância
      
 
-            Debug.Log(u+ "  " + v + "  "+ w+ "  a " + ((u + v + w) <= (1)));
-            Debug.Log(A + "" + B1 + " " + B2 + " " + B3 + " ");
+            
             // Verifica se o ponto A está dentro do triângulo
             //       ok         ok      ok                  ok 
              return u >= 0 && v >= 0 && w >= 0 && (u + v + w) <= (1.1f );

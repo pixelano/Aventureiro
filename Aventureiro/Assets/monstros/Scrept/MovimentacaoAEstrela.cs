@@ -113,6 +113,14 @@ namespace montros
                 calcularRota_b = true;
            
         }
+        public void Parar()
+        {
+           // caminho.Clear();
+            target = transform.position;
+            target.y = transform.position.y;
+            target_ = transform.position;
+            calcularRota_b = true;
+        }
         public void pare(){
          caminho.Clear();   
         }

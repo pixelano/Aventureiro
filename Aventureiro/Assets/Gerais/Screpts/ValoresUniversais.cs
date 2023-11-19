@@ -19,6 +19,14 @@ namespace Ageral
             gravidade = gravidade_;
             VelocidadeDeCaminhadaPortePequeno = VelocidadeDeCaminhadaPortePequeno_;
         }
+       public static float calcularPerlingNoise(float x, float y, float amplitude, float frequencia)
+        {
+            x *= amplitude;
+            y*= amplitude;
+
+
+            return Mathf.PerlinNoise(x/frequencia,y/frequencia);
+        }
 
     }
 }

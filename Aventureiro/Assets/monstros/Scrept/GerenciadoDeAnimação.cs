@@ -30,7 +30,22 @@ namespace montros
          GerenciadorDeAtaques atk,
          GerenciadoDeVida alvo,bool alerta)
         {
-            if (alvo == null) { }
+            if (alvo == null) {
+                animador.SetBool("TerminouAtaque", true);
+                animador.SetBool("caminhando", false);
+                animador.SetBool("Caminhar", false);
+                animador.SetBool("Correr", false);
+                animador.SetBool("atacar", false);
+                animador.SetBool("Em alerta", false);
+                flag_iniciar = false;
+                aux_alerta = false;
+                aux_caminhar =false;
+                lkc.weight = 0;
+                lkc.enabled = false;
+                movimento.Parar();
+            //    movimento.Parar();
+            
+            }
             else
             {
 
