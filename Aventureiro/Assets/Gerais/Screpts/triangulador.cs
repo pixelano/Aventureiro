@@ -9,7 +9,7 @@ namespace Ageral
 {
   
 
-public class triangulador : MonoBehaviour
+public class triangulador : MonoBehaviour 
     {
         // Classe para representar um ponto
      

@@ -2,7 +2,10 @@ using Ageral;
 using Codice.CM.Common;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 using UnityEditor;
+using UnityEditor.EditorTools;
 using UnityEngine;
 
 namespace teste
@@ -14,41 +17,29 @@ namespace teste
         [HideInInspector]
         public List<Vector3> ListaVertices = new List<Vector3>();
 
-        public List<GameObject> vertices_GO = new List<GameObject>();
+     //   public List<GameObject> vertices_GO = new List<GameObject>();
 
         public triangulador trl;
         public Mesh mesh;
         [HideInInspector]
         public bool renderMalha;
-        [Range(0,1)]
+        [Range(0, 1)]
         public float ResistenciaDasArvores, escalaDensidade;
-
-        public float amplitude, frequencia;
+        [Tooltip("zoom, quanto menor maior o zoom")]
+        [Range(0,10)]
+        public float amplitude;
+        [Tooltip("quanto maior o numero mais definido sera os conjuntos")]
+        [Range(0.001f,1000)]
+        public float  frequencia;
 
         public void AdicionarVertice()
         {
-            // Criar uma cópia temporária do objeto atual
-            GameObject manipulador = new GameObject("Vertice " + vertices_GO.Count);
-            manipulador.transform.position = transform.position;
-            manipulador.transform.parent = transform;
-            vertices_GO.Add(manipulador);
-            DestroyImmediate(manipulador.GetComponent<GerenciadorFloresta>());
- 
-
-            // Adicionar um manipulador de Transform ao objeto temporário
-          //  UnityEditor.Tools.current = UnityEditor.Tool.Move;
-          //  UnityEditor.Selection.activeGameObject = manipulador;
+            Vector2 aux = new Vector3();
+            aux = transform.position;
+            PontosFloresta.Add(aux);
+         
         }
-        public void ConverterGtV()
-        {
-            PontosFloresta.Clear();
-            vertices_GO.RemoveAll(x => x == null);
-
-            foreach(GameObject a in vertices_GO)
-            {
-                PontosFloresta.Add(a.transform.position);
-            }
-        }
+      
     
         
 
@@ -138,28 +129,33 @@ namespace teste
         [HideInInspector]
         public List<GameObject> arvores_g = new List<GameObject>();
 
-        public GameObject modeloDeArvore;
+
         public void instanciarArvores()
         {
             arvores_g.ForEach(x => DestroyImmediate(x.gameObject));
             arvores_g.Clear();
 
-           
 
+            int valor = 0;
             if (listaDeArvores.Count > 0)
             {
                 foreach (var a in listaDeArvores)
                 {
                     if (a.valor > ResistenciaDasArvores)
                     {
-                       
-                        GameObject aux = Instantiate(modeloDeArvore, a.local + transform.position, Quaternion.Euler(Vector3.up *Random.Range(-90,90)), transform);
+                      
+
+                        GameObject aux_ = ListaDeArvores_data[valor];
+
+
+                        GameObject aux = Instantiate(aux_, a.local + transform.position, Quaternion.Euler(Vector3.up *Random.Range(-90,90)), transform);
                         arvores_g.Add(aux);
+                        valor = valor + 1 <= ListaDeArvores_data.Count-1 ? valor+1:0;
                     }
                 }
             }
         }
-     
+        [HideInInspector]
         public bool ativar_desativar;
         [System.Serializable]
         public class metaArvore {
@@ -204,20 +200,28 @@ namespace teste
             return areaTotal;
         }
 
+        public List<GameObject> ListaDeArvores_data = new List<GameObject>();
+   
+      
 
     }
     [CustomEditor(typeof(GerenciadorFloresta))]
     public class EditorGerenciadorFloresta : Editor
     {
-     
-
+    
+       
         public override void OnInspectorGUI()
         {
+          
             base.OnInspectorGUI();
 
-            GerenciadorFloresta meuScript = (GerenciadorFloresta)target;
+           
+            
+                GerenciadorFloresta meuScript = (GerenciadorFloresta)target;
 
-       
+         
+      
+
             if (GUILayout.Button("Adicionar Vertice"))
             {
              
@@ -232,6 +236,7 @@ namespace teste
             {
                 meuScript.ativar_desativar = !meuScript.ativar_desativar;
                 serializedObject.ApplyModifiedProperties();
+                Repaint();
             }
 
             if (GUILayout.Button(" criar arvores"))
@@ -242,17 +247,19 @@ namespace teste
             {
                 meuScript.instanciarArvores();
             }
+         
         }
         private void OnSceneGUI()
         {
             GerenciadorFloresta meuScript = (GerenciadorFloresta)target;
-
-            if (ativar_desativar)
+            
+            if (meuScript.ativar_desativar)
             {
-                foreach(Vector3 a in meuScript.PontosFloresta)
+                for(int x = 0; x <  meuScript.PontosFloresta.Count; x++)
                 {
+                    meuScript.PontosFloresta[x] = Handles.PositionHandle(meuScript.PontosFloresta[x], Quaternion.identity);
                     Handles.color = Color.red;
-                    Handles.DrawSolidDisc(a, Vector3.up,1);
+                    Handles.DrawSolidDisc(meuScript.PontosFloresta[x], Vector3.up,1);
                 }
                 if(meuScript.listaDeArvores.Count > 0)
                 {
@@ -270,12 +277,17 @@ namespace teste
         public void calcularArea_()
         {
        GerenciadorFloresta meuScript = (GerenciadorFloresta)target;
-            meuScript.ConverterGtV();
+          
             meuScript.triangular();
             meuScript.criarMalha(meuScript.ListaVertices); 
 
         }
 
+
+
+
+     
+    
 
     }
 }
