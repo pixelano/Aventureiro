@@ -21,8 +21,8 @@ namespace Ageral
         {
             visualizar.Add(transform.position);
         }
-
-       public void gerarEstrada()
+        #region gerarcoisas
+        public void gerarEstrada()
         {
             pontosAuxiliares.Clear();
             // criar pontos auxiliares entre A e B
@@ -117,15 +117,19 @@ namespace Ageral
                 }
             }
 
+
+            Vector3 ultimoPonto = pontosdaEstrada[0].transform.position; ;
             for (int y = 0; y < pontosdaEstrada.Count; y++)
             {
+                if (y == pontosdaEstrada.Count - 1)
+                    break;
                 if (y < pontosdaEstrada.Count - 2)
                 {
                     Vector3 pontoA = pontosdaEstrada[y].transform.position;
                     Vector3 pontoB = pontosdaEstrada[y + 1].transform.position;
                     Vector3 pontoC = pontosdaEstrada[y + 2].transform.position;
-                    Vector3 pontoMedio = (pontoA + pontoB) / 2;
-                    Vector3 direcFinal = pontoMedio;
+                
+
 
                     float Distancia_ = Vector3.Distance(pontoA, pontoB);
                     float orientacao = 0; // reto
@@ -137,36 +141,159 @@ namespace Ageral
                         Debug.Log("foi em " + y);
                     }
                     catch { }
-                 
-                    // Vector3 aux = pontosdaEstrada[y].transform.TransformDirection(Vector3.right) - pontosdaEstrada[y].transform.position;//Vector3.Cross(( pontoA - pontoB).normalized, Vector3.up).normalized;
-                    Vector3 aux = Vector3.Cross(pontoB - pontoA, Vector3.up);
+                    
+                    Vector3 Uponto = (pontoA+ pontoA + pontoB) / 3;
+                    Vector3 aux_ = Vector3.Cross(pontoA - pontoB, Vector3.up);
+                    Uponto += (aux_ * 0.2f) * (orientacao == 1 ? -1 : 1);
+                    float distancia_ = Vector3.Distance(pontoA, pontoB);
+                    // define se o proximo ponto esta na direita ou esquerda
 
-                    if (orientacao != 0)
-                    {
-                        
-                        if (orientacao == 1)
-                        {
-                            direcFinal = pontoMedio + (-pontosdaEstrada[y].transform.right * escala);
+                   
+                    for(int r = 1;r < distancia_ / escala; r++) {
+                      
+                        for (int x= 0;x < escala;x++) {
+                            pontosAuxiliares.Add(Vector3.Lerp(ultimoPonto,Uponto,x/escala));
+                            ultimoPonto = pontosAuxiliares[pontosAuxiliares.Count - 1];
+                        }
+                        Vector3 aux = Vector3.Cross(pontoA - pontoB, Vector3.up);
+                       
 
-                        }
-                        else
-                        {
-                            direcFinal = pontoMedio + (pontosdaEstrada[y].transform.right * escala); ;
-                        }
+                         
+                      
+                        // reset
+                        pontoA = Uponto;
+                     
+                        Uponto = (pontoA + pontoB) / 2;
+                        Uponto += (aux * 0.2f) * (orientacao == 1 ? -1 : 1);
                     }
-                    else { Debug.Log(" deu 0 em " + y); }
-                    for (float x = 0; x < escala; x += 1)
-                    {
-                        pontosAuxiliares.Add(Vector3.Lerp(pontoA,  direcFinal, x / escala));
-                    }
+
                 }
+                else
+                {
+
+                  
+                    pontosAuxiliares = ValoresUniversais.OptimizePath(pontosAuxiliares, tolerancia);
+                    Vector3 pontoAB = Vector3.Lerp(pontosdaEstrada[pontosdaEstrada.Count - 1].transform.position, pontosdaEstrada[pontosdaEstrada.Count-2].transform.position ,0.1f);
+
+                    ultimoPonto = Vector3.Lerp(ultimoPonto, pontoAB, 0.5f);
+
+                    pontosAuxiliares.Add(ultimoPonto);
+
+
+
+                    
+
+                  //  pontosAuxiliares.Add(pontosdaEstrada[pontosdaEstrada.Count - 1].transform.position);
+                }   
+                ultimoPonto = pontosAuxiliares[pontosAuxiliares.Count - 1];
+
+
             }
+
+            pontosAuxiliares.Add(pontosdaEstrada[pontosdaEstrada.Count - 1].transform.position );
+
 
 
             }
         public Color cor;
-        public bool dstvgz;
+        public bool dstvgz,MostrarRastros;
+        public float tolerancia;
+
+        public List<Vector3> ordemTrianguo = new List<Vector3>();
+        public void renderizarMesh()
+        {
+            // pegar um ponto
+            // adicionar pont de um lado e depous do mesmo lado só que do ponto da frente
+            //triangular eles
+            //fazer com o outro laddo
+            ordemTrianguo.Clear();
+         
+            for (int x = 0; x < pontosAuxiliares.Count-1; x++)
+            {
+               
+                    Vector3 orientacao = Vector3.Cross(pontosAuxiliares[x + 1] - pontosAuxiliares[x] , Vector3.up) ;
+                orientacao.Normalize();
+                    Vector3 pontoMeioA = pontosAuxiliares[x] ;
+                    Vector3 pontoMeioB = pontosAuxiliares[x+1] ;
+                    
+                    Vector3 pontoA = pontoMeioA - (orientacao ) ;
+                    Vector3 pontoB = pontoMeioB - (orientacao ) ;
+
+                    ordemTrianguo.Add(pontoA);
+                    ordemTrianguo.Add(pontoB);
+                    ordemTrianguo.Add(pontoMeioA);
+
+                    ordemTrianguo.Add(pontoMeioB);
+                    ordemTrianguo.Add(pontoMeioA);
+                    ordemTrianguo.Add(pontoB);
+
+                 pontoA = pontoMeioA + (orientacao)  ;
+                pontoB = pontoMeioB + (orientacao)  ;
+
+                ordemTrianguo.Add(pontoMeioA);
+                ordemTrianguo.Add(pontoMeioB);
+                ordemTrianguo.Add(pontoA);
+
+                ordemTrianguo.Add(pontoB);
+                ordemTrianguo.Add(pontoA);
+                ordemTrianguo.Add(pontoMeioB);
+
+            }
+            ordemTrianguo.Reverse();
+
+            for(int x = 0; x < ordemTrianguo.Count; x++)
+            {
+                ordemTrianguo[x] -= transform.position;
+            }
+        }
+
+        public Mesh mesh;
+        public bool gerarMalha;
+        public void criarMalha()
+        {
+            mesh = new Mesh();
+
+            // Atribuir os vértices à malha
+            mesh.vertices = ordemTrianguo.ToArray();
+
+            // Definir os triângulos (assumindo que os vértices estão em grupos de três para formar triângulos)
+            int[] triangles = new int[ordemTrianguo.Count];
+            for (int i = 0; i < triangles.Length; i++)
+            {
+                triangles[i] = i;
+            }
+
+            // Atribuir os triângulos à malha
+            mesh.triangles = triangles;
+
+            // Recalcular normais e bounds (opcional, mas geralmente desejável)
+              mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+
+            // Atribuir a malha ao componente MeshFilter do GameObject
+            MeshFilter meshFilter = GetComponent<MeshFilter>();
+            if (meshFilter == null)
+            {
+                meshFilter = gameObject.AddComponent<MeshFilter>();
+            }
+            meshFilter.mesh = mesh;
+
+            // Atribuir um material (pode ajustar conforme necessário)
+            if (gerarMalha)
+            {
+                MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
+                if (meshRenderer == null)
+                {
+                    meshRenderer = gameObject.AddComponent<MeshRenderer>();
+                }
+                meshRenderer.material = new Material(Shader.Find("Standard"));
+            }
+
+
+        }
+
     }
+    #endregion
 
     [CustomEditor(typeof(gerenciadorDeEstradas))]
     public class EditorgerenciadorDeEstradas : Editor
@@ -194,7 +321,14 @@ namespace Ageral
 
                 meuScript.dstvgz =!meuScript.dstvgz;
             }
-        }
+            if (GUILayout.Button("Gerar Malha"))
+            { 
+            
+                meuScript.renderizarMesh();
+                meuScript.criarMalha();
+
+            }
+            }
 
         private void OnSceneGUI()
         {
@@ -222,7 +356,20 @@ namespace Ageral
                     Handles.DrawSolidDisc(meuScript.pontosAuxiliares[x], Vector3.up, 1);
                 }
             }
-            
+            if (meuScript.MostrarRastros)
+            {
+                for(int x =0; x < meuScript.pontosAuxiliares.Count - 1;x++) {
+                    Handles.color = Color.red;
+                    Handles.DrawLine(meuScript.pontosAuxiliares[x], meuScript.pontosAuxiliares[x + 1]);
+                    Handles.color = Color.black;
+                    Handles.DrawSolidDisc(meuScript.pontosAuxiliares[x], Vector3.up, 1);
+
+
+                }
+
+            }
+
+
 
         }
     }

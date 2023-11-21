@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,7 +28,7 @@ namespace Ageral
 
             return Mathf.PerlinNoise(x/frequencia,y/frequencia);
         }
-        public static List<Vector3> OptimizePath(List<Vector3> originalPath)
+        public static List<Vector3> OptimizePath(List<Vector3> originalPath , float tolerancia)
         {
             if (originalPath.Count < 3)
             {
@@ -43,7 +44,7 @@ namespace Ageral
                 Vector3 currentPoint = originalPath[i];
                 Vector3 nextPoint = originalPath[i + 1];
 
-                if (!ArePointsCollinear(previousPoint, currentPoint, nextPoint))
+                if (!ArePointsCollinear(previousPoint, currentPoint, nextPoint,tolerancia))
                 {
                     optimizedPath.Add(currentPoint);
                 }
@@ -53,7 +54,7 @@ namespace Ageral
 
             return optimizedPath;
         }
-        public static bool ArePointsCollinear(Vector3 a, Vector3 b, Vector3 c)
+        public static bool ArePointsCollinear(Vector3 a, Vector3 b, Vector3 c , float tolerancia)
         {
             Vector2 ab = new Vector2(b.x - a.x, b.z - a.z);
             Vector2 ac = new Vector2(c.x - a.x, c.z - a.z);
@@ -61,7 +62,7 @@ namespace Ageral
             float crossProduct = ab.x * ac.y - ab.y * ac.x;
 
             // Se o produto cruzado for quase zero, os pontos est�o em linha reta.
-            return Mathf.Approximately(crossProduct, 0);
+            return MathF.Abs( crossProduct ) < tolerancia;
         }
 
         public static float Orientacao(Vector2 p, Vector2 q, Vector2 r)
