@@ -14,12 +14,12 @@ namespace Ageral
     {
         public float espessura;
         public float escala;
-        public List<GameObject> pontosdaEstrada = new List<GameObject>();
+        public List<Vector3> pontosdaEstrada = new List<Vector3>();
         public List<Vector3> pontosAuxiliares = new List<Vector3>();
-        public List<Vector3> visualizar = new List<Vector3>();
+       
         public void AdicionarVertice()
         {
-            visualizar.Add(transform.position);
+            pontosdaEstrada.Add(transform.position);
         }
         #region gerarcoisas
         public void gerarEstrada()
@@ -27,118 +27,28 @@ namespace Ageral
             pontosAuxiliares.Clear();
             // criar pontos auxiliares entre A e B
             // angulo formado de A para B ?
-            /*
-            for (int y = 1; y < pontosdaEstrada.Count; y++)
-            {
-                if (y == pontosdaEstrada.Count - 1)
-                    break;
-
-                Vector3 MinhaOri = pontosdaEstrada[y ] - pontosdaEstrada[y -1];
-                Vector3 queroIr = pontosdaEstrada[y + 1] - pontosdaEstrada[y];
-               
-                float angulo = Vector3.Angle(queroIr, MinhaOri) * Mathf.Deg2Rad;
-
-                Vector3 dire = MinhaOri;
-                float distancia = Vector3.Distance(pontosdaEstrada[y], pontosdaEstrada[y + 1]);
-                float direc_X = 1, direc_Z = 1;
-                float ori = 0;
-                if (y <  pontosdaEstrada.Count - 2)
-                {
-                    Vector3 eleQuerIr = pontosdaEstrada[y + 2] - pontosdaEstrada[y + 1];
-
-                    ori =  ValoresUniversais.Orientacao(Vector3.zero, MinhaOri, eleQuerIr);
-
-                }
-                Vector3 direcaoAB = pontosdaEstrada[y+1] - pontosdaEstrada[y];
-
-
-                // Calcula um vetor perpendicular (para a esquerda) usando o produto vetorial
-                Vector3 direcaoEsquerda = Vector3.Cross(direcaoAB.normalized, Vector3.up).normalized;
-            
-
-            
-                for (float x = 0; x < distancia; x += escala + x/distancia)
-                {
-                           float sen = Mathf.Sin(angulo) * x *  x/distancia;
-                           float cos = Mathf.Cos(angulo) * x*  x/distancia;
-                           Vector3 irp = new Vector3(sen * direc_X,0,cos * queroIr.z) ;
-                  
-                    if (ori == 1) {
-                        irp = irp + direcaoEsquerda/2 ;
-                    } else
-                    {
-                        irp = irp - direcaoEsquerda/2;
-                    }
-                    dire = Vector3.Lerp(pontosdaEstrada[y] + irp, queroIr + pontosdaEstrada[y], x / distancia);
-
-                    pontosAuxiliares.Add(dire) ;
-                }
-            }
-            pontosAuxiliares = ValoresUniversais.OptimizePath(pontosAuxiliares);
-            // resumir elas
-            // adicionar a espessura da estrada seguindo a orientação
-            // triangular de forma simples
-            /*
-             * 
-             * para saber para que lado a curva tem que fazer é baseado para qual lado o vertice V+1 para V+2 aponta em relação a             
-             * V para V+1 com isso descobri sé para a esquerda ou para a direita
-             */
-            if (visualizar.Count != pontosdaEstrada.Count)
-            {
-                for (int y = 0; y < pontosdaEstrada.Count; y++)
-                {
-                    DestroyImmediate(pontosdaEstrada[y]);
-                }
-                pontosdaEstrada.Clear();
-                for (int y = 0; y < visualizar.Count; y++)
-                {
-                    GameObject aux = new GameObject("");
-                    pontosdaEstrada.Add(aux);
-                }
-            }
-
-                    for (int y = 0; y < visualizar.Count; y++)
-                {
-                      GameObject aux = pontosdaEstrada[y];
-                    aux.transform.parent = transform;
-                    aux.transform.position = visualizar[y];
-                  
-
-                }
-            
-            for (int y = 0; y < pontosdaEstrada.Count; y++)
-            {
-                if (y == pontosdaEstrada.Count - 1) {
-                   // pontosdaEstrada[y].transform.LookAt(pontosdaEstrada[y ].transform);
-                }
-                else
-                {
-                    pontosdaEstrada[y].transform.LookAt(pontosdaEstrada[y + 1].transform);
-                }
-            }
-
-
-            Vector3 ultimoPonto = pontosdaEstrada[0].transform.position; ;
+         
+            Vector3 ultimoPonto = pontosdaEstrada[0];
             for (int y = 0; y < pontosdaEstrada.Count; y++)
             {
                 if (y == pontosdaEstrada.Count - 1)
                     break;
                 if (y < pontosdaEstrada.Count - 2)
                 {
-                    Vector3 pontoA = pontosdaEstrada[y].transform.position;
-                    Vector3 pontoB = pontosdaEstrada[y + 1].transform.position;
-                    Vector3 pontoC = pontosdaEstrada[y + 2].transform.position;
+                    Vector3 pontoA = pontosdaEstrada[y];
+                    Vector3 pontoB = pontosdaEstrada[y + 1];
+                    Vector3 pontoC = pontosdaEstrada[y + 2];
                 
 
 
-                    float Distancia_ = Vector3.Distance(pontoA, pontoB);
+                   
                     float orientacao = 0; // reto
                     try
                     {
                         Vector3 eleQuerIr = pontoC - pontoA;
 
-                        orientacao = ValoresUniversais.Orientacao(pontoA,pontoB,pontoC);
-                        Debug.Log("foi em " + y);
+                        orientacao = ValoresUniversais.Orientacao3(pontoA,pontoB,pontoC);
+                        Debug.Log("foi "+ orientacao + " em " + y);
                     }
                     catch { }
                     
@@ -149,7 +59,7 @@ namespace Ageral
                     // define se o proximo ponto esta na direita ou esquerda
 
                    
-                    for(int r = 1;r < distancia_ / escala; r++) {
+                    for(int r = 2;r < (distancia_ / escala); r++) {
                       
                         for (int x= 0;x < escala;x++) {
                             pontosAuxiliares.Add(Vector3.Lerp(ultimoPonto,Uponto,x/escala));
@@ -172,8 +82,8 @@ namespace Ageral
                 {
 
                   
-                    pontosAuxiliares = ValoresUniversais.OptimizePath(pontosAuxiliares, tolerancia);
-                    Vector3 pontoAB = Vector3.Lerp(pontosdaEstrada[pontosdaEstrada.Count - 1].transform.position, pontosdaEstrada[pontosdaEstrada.Count-2].transform.position ,0.1f);
+                    pontosAuxiliares = ValoresUniversais.OptimizePath(pontosAuxiliares, DiminuirEmRetas);
+                    Vector3 pontoAB = Vector3.Lerp(pontosdaEstrada[pontosdaEstrada.Count - 1], pontosdaEstrada[pontosdaEstrada.Count-2] ,0.1f);
 
                     ultimoPonto = Vector3.Lerp(ultimoPonto, pontoAB, 0.5f);
 
@@ -190,14 +100,16 @@ namespace Ageral
 
             }
 
-            pontosAuxiliares.Add(pontosdaEstrada[pontosdaEstrada.Count - 1].transform.position );
-
+            pontosAuxiliares.Add(pontosdaEstrada[pontosdaEstrada.Count - 1] );
 
 
             }
+        [Range(0,1)]
+        public float Suavização;
+      
         public Color cor;
         public bool dstvgz,MostrarRastros;
-        public float tolerancia;
+        public float DiminuirEmRetas,AdicionarPoligonosACadaXDistancia;
 
         public List<Vector3> ordemTrianguo = new List<Vector3>();
         public void renderizarMesh()
@@ -213,11 +125,20 @@ namespace Ageral
                
                     Vector3 orientacao = Vector3.Cross(pontosAuxiliares[x + 1] - pontosAuxiliares[x] , Vector3.up) ;
                 orientacao.Normalize();
-                    Vector3 pontoMeioA = pontosAuxiliares[x] ;
-                    Vector3 pontoMeioB = pontosAuxiliares[x+1] ;
+               // Vector3 pontoMeioA = pontosAuxiliares[x];
+                Vector3 pontoMeioA = pontosAuxiliares[x];
+                Vector3 pontoMeioB = pontosAuxiliares[x+1] ;
                     
-                    Vector3 pontoA = pontoMeioA - (orientacao ) ;
-                    Vector3 pontoB = pontoMeioB - (orientacao ) ;
+                  
+                
+                // Vector3 pontoA = pontoMeioA - (orientacao ) ;
+                Vector3 pontoA = x== 0 ? pontoMeioA - (orientacao) : ordemTrianguo[ordemTrianguo.Count -7 ];
+                Vector3 aux = Vector3.zero;
+                if (x != 0)
+                {
+                 aux = ordemTrianguo[ordemTrianguo.Count - 3];
+                }
+                Vector3 pontoB = pontoMeioB - (orientacao ) ;
 
                     ordemTrianguo.Add(pontoA);
                     ordemTrianguo.Add(pontoB);
@@ -227,7 +148,9 @@ namespace Ageral
                     ordemTrianguo.Add(pontoMeioA);
                     ordemTrianguo.Add(pontoB);
 
-                 pontoA = pontoMeioA + (orientacao)  ;
+                //pontoA = pontoMeioA + (orientacao)  ;
+
+                pontoA =  x == 0 ? pontoMeioA + (orientacao) : aux;
                 pontoB = pontoMeioB + (orientacao)  ;
 
                 ordemTrianguo.Add(pontoMeioA);
@@ -291,7 +214,69 @@ namespace Ageral
 
 
         }
+        public void adicionarPoligonos()
+        {
+            List<Vector3> auxListaPolig = new List<Vector3>();
 
+            for(int x= 0; x < pontosAuxiliares.Count-1; x++)
+            {
+                float distAB = Vector3.Distance(pontosAuxiliares[x], pontosAuxiliares[x + 1]);
+                auxListaPolig.Add(pontosAuxiliares[x]);
+                int repts = (int)(distAB / AdicionarPoligonosACadaXDistancia);
+             
+                for (int y= 1; y < repts; y++)
+                {
+                    auxListaPolig.Add(Vector3.Lerp(pontosAuxiliares[x], pontosAuxiliares[x + 1], (float)((float)y/(float) repts)));
+                }
+            }
+            pontosAuxiliares = auxListaPolig;
+        }
+        public void suavisarMalha()
+        {
+
+            for (int x = 1; x < pontosAuxiliares.Count - 1; x++)
+            {
+                Vector3 AB = Vector3.Lerp(pontosAuxiliares[x - 1], pontosAuxiliares[x], Suavização);
+                AB = Vector3.Lerp(AB, pontosAuxiliares[x + 1], Suavização);
+
+                pontosAuxiliares[x] = AB;
+            }
+        }
+        public List<Vector3> suavisarMalha(List<Vector3> lista)
+        {
+
+            for (int x = 1; x < lista.Count - 1; x++)
+            {
+                Vector3 AB = Vector3.Lerp(lista[x - 1], lista[x], Suavização);
+                AB = Vector3.Lerp(AB, lista[x + 1], Suavização);
+
+                lista[x] = AB;
+            }
+            return lista;
+        }
+        public int QuantidadeDeAmostragem, AnguloAgudo;
+        public void suavizacaoAutomatica()
+        {
+            for (int x = 0; x < pontosAuxiliares.Count - 1; x++)
+            {
+                List<Vector3> TempVertices = new List<Vector3>();
+                for (int z = 0; z < QuantidadeDeAmostragem; z++)
+                {
+                    if (x + z > pontosAuxiliares.Count - 1)
+                        break;
+                    TempVertices.Add(pontosAuxiliares[x + z]);
+                }
+                if (ValoresUniversais.VerificarCurvaAguda(TempVertices, AnguloAgudo))
+                {
+                    TempVertices = suavisarMalha(TempVertices);
+
+                    for(int z = 0;z < TempVertices.Count - 1; z++)
+                    {
+                        pontosAuxiliares[x + z] = TempVertices[z];
+                    }
+                }
+            }
+        }
     }
     #endregion
 
@@ -303,7 +288,7 @@ namespace Ageral
         {
             gerenciadorDeEstradas meuScript = (gerenciadorDeEstradas)target;
             base.OnInspectorGUI();
-            
+
 
             if (GUILayout.Button("Adicionar Vertice"))
             {
@@ -319,34 +304,48 @@ namespace Ageral
             if (GUILayout.Button("desativar guizmo"))
             {
 
-                meuScript.dstvgz =!meuScript.dstvgz;
+                meuScript.dstvgz = !meuScript.dstvgz;
             }
             if (GUILayout.Button("Gerar Malha"))
-            { 
-            
+            {
+
                 meuScript.renderizarMesh();
                 meuScript.criarMalha();
 
             }
+            if (GUILayout.Button("suavizar Malha"))
+            {
+                meuScript.suavisarMalha();
             }
+
+            if (GUILayout.Button("Adicionar poligonos na Malha"))
+            {
+                meuScript.adicionarPoligonos();
+            }
+            if (GUILayout.Button("Suavização automatica"))
+            {
+
+                meuScript.suavizacaoAutomatica();
+                    }
+        }
 
         private void OnSceneGUI()
         {
             gerenciadorDeEstradas meuScript = (gerenciadorDeEstradas)target;
             if (meuScript.dstvgz)
             {
-                for (int x = 0; x < meuScript.visualizar.Count; x++)
+                for (int x = 0; x < meuScript.pontosdaEstrada.Count; x++)
                 {
-                    meuScript.visualizar[x] = Handles.PositionHandle(meuScript.visualizar[x], Quaternion.identity);
+                    meuScript.pontosdaEstrada[x] = Handles.PositionHandle(meuScript.pontosdaEstrada[x], Quaternion.identity);
                     Handles.color = Color.red;
-                    Handles.DrawSolidDisc(meuScript.visualizar[x], Vector3.up, 1);
+                    Handles.DrawSolidDisc(meuScript.pontosdaEstrada[x], Vector3.up, 1);
 
-                    if (x < meuScript.visualizar.Count - 1)
+                    if (x < meuScript.pontosdaEstrada.Count - 1)
                     {
-                        float dist = Vector3.Distance(meuScript.visualizar[x], meuScript.visualizar[x + 1]);
+                        float dist = Vector3.Distance(meuScript.pontosdaEstrada[x], meuScript.pontosdaEstrada[x + 1]);
                         //    Handles.color = meuScript.cor;
-                        Handles.ArrowHandleCap(0, meuScript.visualizar[x],
-                           Quaternion.LookRotation(meuScript.visualizar[x + 1] - meuScript.visualizar[x]), dist, EventType.Repaint);
+                        Handles.ArrowHandleCap(0, meuScript.pontosdaEstrada[x],
+                           Quaternion.LookRotation(meuScript.pontosdaEstrada[x + 1] - meuScript.pontosdaEstrada[x]), dist, EventType.Repaint);
                         // Handles.DrawLine(meuScript.pontosdaEstrada[x], meuScript.pontosdaEstrada[x+1]);
                     }
                 }

@@ -71,11 +71,50 @@ namespace Ageral
             if (val == 0) return 0;  // Colinear
             return (val > 0) ? 1 : 2; // Horário ou anti-horário
         }
-        public static float Orientacao(Vector3 p, Vector3 q, Vector3 r)
+        public static float Orientacao3(Vector3 p, Vector3 q, Vector3 r)
         {
-            float val = (q.z - p.y) * (r.x - q.x) - (q.x - p.x) * (r.z - q.z);
+            float val = (q.z - p.z) * (r.x - q.x) - (q.x - p.x) * (r.z - q.z);
             if (val == 0) return 0;  // Colinear
             return (val > 0) ? 1 : 2; // Horário ou anti-horário
+        }
+      public static bool VerificarCurvaAguda(List<Vector3> pontos, float anguloLimite)
+        {
+            if (pontos.Count < 3)
+            {
+          
+                return false;
+            }
+            Vector3 maisLonge = Vector3.zero;
+            float distM = Vector3.Distance(pontos[0], pontos[1]);
+            for (int i = 1; i < pontos.Count - 1; i++)
+            {
+                float tempDist = Vector3.Distance(pontos[i], pontos[i + 1]);
+                if (tempDist > distM)
+                {
+                    maisLonge = pontos[i];
+                    distM = tempDist;
+                }
+            }
+
+           
+                Vector3 vetorAnterior = pontos[0] - maisLonge;
+                Vector3 vetorAtual = pontos[pontos.Count-1] - maisLonge;
+
+               
+                vetorAnterior.Normalize();
+                vetorAtual.Normalize();
+
+                float angulo = Mathf.Acos(Vector3.Dot(vetorAnterior, vetorAtual)) * Mathf.Rad2Deg;
+
+                if (angulo < anguloLimite)
+                {
+                  
+                    return true;
+                }
+            
+
+          
+            return false;
         }
     }
 }
