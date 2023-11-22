@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using teste;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Ageral
 {
@@ -11,6 +12,8 @@ namespace Ageral
         public List<Vector3> ListaVertices = new List<Vector3>();
         public GerenciadorFloresta grf;
         public triangulador trl;
+        public float TamanhoParaRemover;
+
         public void adicionarVertice()
         {
             ListaVertices.Add(transform.position);
@@ -25,32 +28,37 @@ namespace Ageral
         {
             mesh = new Mesh();
 
-            // Atribuir os vértices à malha
             mesh.vertices = vertices.ToArray();
 
-            // Definir os triângulos (assumindo que os vértices estão em grupos de três para formar triângulos)
             int[] triangles = new int[vertices.Count];
             for (int i = 0; i < triangles.Length; i++)
             {
                 triangles[i] = i;
             }
 
-            // Atribuir os triângulos à malha
+     
             mesh.triangles = triangles;
 
-            // Recalcular normais e bounds (opcional, mas geralmente desejável)
-            //   mesh.RecalculateNormals();
+         
             mesh.RecalculateBounds();
 
+
+         
+
             // Atribuir a malha ao componente MeshFilter do GameObject
-            MeshFilter meshFilter = GetComponent<MeshFilter>();
+            
             if (meshFilter == null)
             {
                 meshFilter = gameObject.AddComponent<MeshFilter>();
             }
             meshFilter.mesh = mesh;
+            if (tempCollider == null)
+            {
+                tempCollider = gameObject.AddComponent<MeshCollider>();
+            }
+            tempCollider.sharedMesh = meshFilter.sharedMesh;
+           
 
-            // Atribuir um material (pode ajustar conforme necessário)
             if (renderMalha)
             {
                 MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
@@ -68,10 +76,7 @@ namespace Ageral
             // interar todas as arvores
             // pegar a distancia mais procima da malha na arvore
             //se for pequena remover a arvore
-            meshFilter = GetComponent<MeshFilter>();
-            tempCollider = gameObject.AddComponent<MeshCollider>();
-            tempCollider.sharedMesh = meshFilter.sharedMesh;
-
+        
             grf.arvores_g.RemoveAll(x => x == null);
             foreach (GameObject a in grf.arvores_g)
             {
@@ -89,31 +94,97 @@ namespace Ageral
         public MeshCollider tempCollider;
         bool ArovreNaMalha(GameObject arvore)
         {
-
-        
-
-            Vector3 pontoMaisProximo = tempCollider.ClosestPointOnBounds(arvore.transform.position);
-            pontoMaisProximo.y = 0;
-            Vector3 auxJ = arvore.transform.position;
-            auxJ.y = 0;
-            
-
-
-            // Agora você pode verificar se o jogador está dentro da área demarcada pela mesh
-            if (Vector3.Distance(auxJ, pontoMaisProximo) < 0.1f)
+            bool aux = false;
+          
+            for(int x= 0; x < ordemTrianguo.Count / 3; x++)
             {
-                return true;
+                if (trl.PontoDentroTriangulo(arvore.transform.position, ordemTrianguo[x * 3], ordemTrianguo[(x * 3)+1], ordemTrianguo[(x*3) + 2]))
+                {
+                    aux = true;
+                    break;
+                }
             }
-            else
-            {
-                Debug.Log(Vector3.Distance(auxJ, pontoMaisProximo));
-                return false;
-
-            }
+            return aux;
 
         }
         [HideInInspector]
         public bool AtivadoDesativadoGuizmos;
+
+        public List<Vector3> ordemTrianguo = new List<Vector3>();
+        public void criarMalhaParaRemover(List<Vector3> lista)
+        {
+            ordemTrianguo.Clear();
+            for (int x = 0; x < lista.Count - 1; x++)
+            {
+
+                Vector3 orientacao = Vector3.Cross(lista[x + 1] - lista[x], Vector3.up);
+                orientacao.Normalize();
+                // Vector3 pontoMeioA = lista[x];
+                Vector3 pontoMeioA = lista[x];
+                Vector3 pontoMeioB = lista[x + 1];
+
+
+
+                // Vector3 pontoA = pontoMeioA - (orientacao ) ;
+                Vector3 pontoA_E = x == 0 ? pontoMeioA - (orientacao * TamanhoParaRemover) : ordemTrianguo[ordemTrianguo.Count - 1];
+                Vector3 pontoB_E = pontoMeioB - (orientacao * TamanhoParaRemover);
+                Vector3 pontoA_D = x == 0 ? pontoMeioA + (orientacao * TamanhoParaRemover) : ordemTrianguo[ordemTrianguo.Count - 3];
+                Vector3 pontoB_D = pontoMeioB + (orientacao * TamanhoParaRemover);
+
+                ordemTrianguo.Add(pontoA_E);
+                ordemTrianguo.Add(pontoB_E);
+                ordemTrianguo.Add(pontoA_D);
+
+                ordemTrianguo.Add(pontoB_D);
+                ordemTrianguo.Add(pontoA_D);
+                ordemTrianguo.Add(pontoB_E);
+
+
+            }
+            ordemTrianguo.Reverse();
+
+            for (int x = 0; x < ordemTrianguo.Count; x++)
+            {
+                ordemTrianguo[x] -= transform.position;
+            }
+            criarMalha(ordemTrianguo);
+
+        }
+        public void limparMalha()
+        {
+            mesh = new Mesh();
+            MeshFilter meshFilter = GetComponent<MeshFilter>();
+            meshFilter = new MeshFilter();
+        }
+        public void TestarERemover(GameObject P)
+        {
+            // aresta AB para P  !=  aresta AC para P
+
+            for(int x = 0; x < ordemTrianguo.Count /3; x++)
+            {
+                if (P == null)
+                    break;
+                Vector3 A = ordemTrianguo[x * 3] + transform.position;
+                Vector3 B = ordemTrianguo[(x * 3 ) +1] + transform.position;
+                Vector3 C = ordemTrianguo[(x * 3 ) +2] + transform.position;
+             
+
+                float MaxDist = Vector3.Distance(A, C);
+                MaxDist = MaxDist < Vector3.Distance(A, B) ? Vector3.Distance(A, B) : MaxDist;
+                if (Vector3.Distance(A, P.transform.position) < MaxDist)
+                {
+                    float ab = ValoresUniversais.Orientacao3(A, B, P.transform.position);
+                    float ac = ValoresUniversais.Orientacao3(A, C, P.transform.position);
+                    if (ab == ac || ac == 0)
+                        continue;
+                    DestroyImmediate(P);
+                 
+                }
+
+
+            }
+
+        }
 
     }
     [CustomEditor(typeof(LimparArea))]
@@ -167,6 +238,16 @@ namespace Ageral
                            Quaternion.LookRotation(meuScript.ListaVertices[x + 1] - meuScript.ListaVertices[x]), dist, EventType.Repaint);
                     }
                 }
+            }
+            for(int x= 0; x < meuScript.ordemTrianguo.Count/3; x++)
+            {
+                Handles.color = Color.red;
+                Handles.DrawSolidDisc(meuScript.ordemTrianguo[x * 3] + meuScript.transform.position, Vector3.up, 1);
+                Handles.color = Color.white;
+                Handles.DrawSolidDisc(meuScript.ordemTrianguo[(x*3) +1] + meuScript.transform.position, Vector3.up, 1);
+
+                Handles.color = Color.blue;
+                Handles.DrawLine(meuScript.ordemTrianguo[x * 3] + meuScript.transform.position, meuScript.ordemTrianguo[(x *3) +1] + meuScript.transform.position);
             }
         }
 

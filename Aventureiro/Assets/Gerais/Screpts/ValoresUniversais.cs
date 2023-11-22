@@ -68,8 +68,8 @@ namespace Ageral
         public static float Orientacao(Vector2 p, Vector2 q, Vector2 r)
         {
             float val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-            if (val == 0) return 0;  // Colinear
-            return (val > 0) ? 1 : 2; // Horário ou anti-horário
+            if (val == 0) return 0;  // esta reto
+            return (val > 0) ? 1 : 2; // direita / esquerda
         }
         public static float Orientacao3(Vector3 p, Vector3 q, Vector3 r)
         {

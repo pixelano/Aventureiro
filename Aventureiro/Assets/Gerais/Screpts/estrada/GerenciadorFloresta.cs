@@ -24,14 +24,16 @@ namespace teste
         [HideInInspector]
         public bool renderMalha;
         [Range(0, 1)]
-        public float ResistenciaDasArvores, escalaDensidade;
+        public float ResistenciaDasArvores;
+        [Range(0.001f,0.02f)]
+        public float escalaDensidade;
         [Tooltip("zoom, quanto menor maior o zoom")]
         [Range(0,10)]
         public float amplitude;
         [Tooltip("quanto maior o numero mais definido sera os conjuntos")]
         [Range(0.001f,1000)]
         public float  frequencia;
-
+        public List<GameObject> ListaDeArvores_data = new List<GameObject>();
         public void AdicionarVertice()
         {
             Vector2 aux = new Vector3();
@@ -39,10 +41,14 @@ namespace teste
             PontosFloresta.Add(aux);
          
         }
-      
-    
-        
+        public void removerVertice()
+        {
+            PontosFloresta.RemoveAt(PontosFloresta.Count - 1);
+        }
 
+
+
+        MeshCollider colisorFloresta;
         public void criarMalha(List<Vector3> vertices)
         {
                 mesh = new Mesh();
@@ -61,8 +67,8 @@ namespace teste
                 mesh.triangles = triangles;
 
                 // Recalcular normais e bounds (opcional, mas geralmente desejável)
-                //   mesh.RecalculateNormals();
-                mesh.RecalculateBounds();
+                   mesh.RecalculateNormals();
+                  mesh.RecalculateBounds();
 
                 // Atribuir a malha ao componente MeshFilter do GameObject
                 MeshFilter meshFilter = GetComponent<MeshFilter>();
@@ -72,8 +78,15 @@ namespace teste
                 }
                 meshFilter.mesh = mesh;
 
-                // Atribuir um material (pode ajustar conforme necessário)
-                if (renderMalha)
+
+
+            if (colisorFloresta == null)
+            {
+                colisorFloresta = gameObject.AddComponent<MeshCollider>();
+            }
+            colisorFloresta.sharedMesh = meshFilter.sharedMesh;
+            // Atribuir um material (pode ajustar conforme necessário)
+            if (renderMalha)
                 {
                     MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
                     if (meshRenderer == null)
@@ -170,7 +183,13 @@ namespace teste
                 //this.obj = obj;
             }
         }
-        
+        private void Start()
+        {
+            if(trl == null)
+            {
+                trl = gameObject.AddComponent<triangulador>();
+            }
+        }
         float CalcularAreaDaMesh(Mesh mesh)
         {
             int[] triangles = mesh.triangles;
@@ -200,7 +219,7 @@ namespace teste
             return areaTotal;
         }
 
-        public List<GameObject> ListaDeArvores_data = new List<GameObject>();
+  
    
       
 
@@ -208,46 +227,77 @@ namespace teste
     [CustomEditor(typeof(GerenciadorFloresta))]
     public class EditorGerenciadorFloresta : Editor
     {
-    
-       
+
+        SerializedProperty frequencia, amplitude, escalaDensidade, ResistenciaDasArvores, ListaDeArvores_data;
+        void OnEnable()
+        {
+            frequencia = serializedObject.FindProperty("frequencia");
+            amplitude = serializedObject.FindProperty("amplitude");
+            escalaDensidade = serializedObject.FindProperty("escalaDensidade");
+            ResistenciaDasArvores = serializedObject.FindProperty("ResistenciaDasArvores");
+            ListaDeArvores_data = serializedObject.FindProperty("ListaDeArvores_data");
+
+
+
+            GerenciadorFloresta meuScript = (GerenciadorFloresta)target;
+            if(meuScript.trl == null)
+            {
+                meuScript.trl = meuScript.gameObject.AddComponent<triangulador>();
+            }
+        }
         public override void OnInspectorGUI()
         {
-          
-            base.OnInspectorGUI();
 
-           
+
+
+            serializedObject.Update();
+
             
-                GerenciadorFloresta meuScript = (GerenciadorFloresta)target;
+                  EditorGUILayout.PropertyField(ListaDeArvores_data, new GUIContent("Modelos de arvores"));
+            GerenciadorFloresta meuScript = (GerenciadorFloresta)target;
+            if (GUILayout.Button(" ativar / desativa   guizmo"))
+            {
+                meuScript.ativar_desativar = !meuScript.ativar_desativar;
+                serializedObject.ApplyModifiedProperties();
+                Repaint();
+            }
+          
+        
+            EditorGUILayout.PropertyField(frequencia, new GUIContent("Frquencia das arvores"));
+            EditorGUILayout.PropertyField(amplitude, new GUIContent("ampliude das arvores"));
+            EditorGUILayout.PropertyField(escalaDensidade, new GUIContent("escala De densidade das arvores"));
 
-         
-      
+
+            EditorGUILayout.PropertyField(ResistenciaDasArvores, new GUIContent("Resistencia das arvores"));
+            if (GUILayout.Button(" criar arvores"))
+            {
+                meuScript.percorrerMalha(meuScript.mesh);
+            }
 
             if (GUILayout.Button("Adicionar Vertice"))
             {
              
                 meuScript.AdicionarVertice();
             }
+            if (GUILayout.Button("Adicionar Vertice"))
+            {
+
+                meuScript.removerVertice();
+            }
             if (GUILayout.Button("Calcular area ?"))
             {
               
                calcularArea_();
             }
-            if(GUILayout.Button(" ativar / desativa   guizmo"))
-            {
-                meuScript.ativar_desativar = !meuScript.ativar_desativar;
-                serializedObject.ApplyModifiedProperties();
-                Repaint();
-            }
+          
 
-            if (GUILayout.Button(" criar arvores"))
-            {
-                meuScript.percorrerMalha(meuScript.mesh);
-            }
+           
             if (GUILayout.Button("instanciar modelos de arvores"))
             {
                 meuScript.instanciarArvores();
             }
-         
+            serializedObject.ApplyModifiedProperties();
+
         }
         private void OnSceneGUI()
         {

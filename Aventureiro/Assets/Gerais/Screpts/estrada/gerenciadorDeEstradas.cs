@@ -1,27 +1,49 @@
+using log4net.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using teste;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Ageral.triangulador;
 using static UnityEngine.GraphicsBuffer;
-
+ 
 namespace Ageral
 {
     public class gerenciadorDeEstradas : MonoBehaviour
     {
-        public float espessura;
-        public float escala;
+        public float espessura = 5;
+        public float escala = 5;
+        public int AnguloAgudo = 45;
+        public bool dstvgz, MostrarRastros;
+        [Tooltip("valor aproximado de 1 que define se o ponto C de AB esta reto ou não")]
+      
+        public float DiminuirEmRetas = 2;
+        public float AdicionarPoligonosACadaXDistancia =5;
+        public int QuantidadeDeAmostragemParaSuavizacaoAutomatica = 30;
+
+        [Tooltip("é o quanto o B esta de C apartir de A")]
+        [Range(0, 1)]
+        public float Suavizacao;
+        public LayerMask layerDaFloresta;
+        public LimparArea lmp;
+
         public List<Vector3> pontosdaEstrada = new List<Vector3>();
         public List<Vector3> pontosAuxiliares = new List<Vector3>();
-       
-        public void AdicionarVertice()
+    public void AdicionarVertice()
         {
             pontosdaEstrada.Add(transform.position);
         }
-        #region gerarcoisas
+        public void DiminuirVertice()
+        {
+            pontosdaEstrada.RemoveAt(pontosdaEstrada.Count-1);
+        }
+        
+
         public void gerarEstrada()
         {
             pontosAuxiliares.Clear();
@@ -103,14 +125,32 @@ namespace Ageral
             pontosAuxiliares.Add(pontosdaEstrada[pontosdaEstrada.Count - 1] );
 
 
-            }
-        [Range(0,1)]
-        public float Suavização;
-      
-        public Color cor;
-        public bool dstvgz,MostrarRastros;
-        public float DiminuirEmRetas,AdicionarPoligonosACadaXDistancia;
 
+            }
+     
+        public Color cor;
+
+        private void Start()
+        {
+            if (lmp == null)
+            {
+                if(GetComponentInChildren<LimparArea>() != null)
+                {
+                    lmp = GetComponentInChildren<LimparArea>();
+                }
+                else
+                {
+                    GameObject a = new GameObject("limpador De Area");
+                    a.transform.position = transform.position;
+                    a.transform.parent = transform;
+                    lmp= a.AddComponent<LimparArea>();
+                    a.GetComponent<LimparArea>().TamanhoParaRemover = 30;
+                    a.GetComponent<LimparArea>().trl = a.AddComponent<triangulador>();
+
+
+                }
+            }
+        }
         public List<Vector3> ordemTrianguo = new List<Vector3>();
         public void renderizarMesh()
         {
@@ -123,7 +163,7 @@ namespace Ageral
             for (int x = 0; x < pontosAuxiliares.Count-1; x++)
             {
                
-                    Vector3 orientacao = Vector3.Cross(pontosAuxiliares[x + 1] - pontosAuxiliares[x] , Vector3.up) ;
+                    Vector3 orientacao = Vector3.Cross(pontosAuxiliares[x +1] - pontosAuxiliares[x] , Vector3.up) ;
                 orientacao.Normalize();
                // Vector3 pontoMeioA = pontosAuxiliares[x];
                 Vector3 pontoMeioA = pontosAuxiliares[x];
@@ -132,35 +172,20 @@ namespace Ageral
                   
                 
                 // Vector3 pontoA = pontoMeioA - (orientacao ) ;
-                Vector3 pontoA = x== 0 ? pontoMeioA - (orientacao) : ordemTrianguo[ordemTrianguo.Count -7 ];
-                Vector3 aux = Vector3.zero;
-                if (x != 0)
-                {
-                 aux = ordemTrianguo[ordemTrianguo.Count - 3];
-                }
-                Vector3 pontoB = pontoMeioB - (orientacao ) ;
+                Vector3 pontoA_E = x==0? pontoMeioA - (orientacao * espessura) : ordemTrianguo[ordemTrianguo.Count-1] ;
+                Vector3 pontoB_E = pontoMeioB - (orientacao * espessura);
+                Vector3 pontoA_D = x == 0 ?pontoMeioA + (orientacao * espessura) : ordemTrianguo[ordemTrianguo.Count - 3]; 
+                Vector3 pontoB_D = pontoMeioB + (orientacao * espessura);
 
-                    ordemTrianguo.Add(pontoA);
-                    ordemTrianguo.Add(pontoB);
-                    ordemTrianguo.Add(pontoMeioA);
+                ordemTrianguo.Add(pontoA_E);
+                    ordemTrianguo.Add(pontoB_E);
+                    ordemTrianguo.Add(pontoA_D);
 
-                    ordemTrianguo.Add(pontoMeioB);
-                    ordemTrianguo.Add(pontoMeioA);
-                    ordemTrianguo.Add(pontoB);
+                    ordemTrianguo.Add(pontoB_D);
+                    ordemTrianguo.Add(pontoA_D);
+                    ordemTrianguo.Add(pontoB_E);
 
-                //pontoA = pontoMeioA + (orientacao)  ;
-
-                pontoA =  x == 0 ? pontoMeioA + (orientacao) : aux;
-                pontoB = pontoMeioB + (orientacao)  ;
-
-                ordemTrianguo.Add(pontoMeioA);
-                ordemTrianguo.Add(pontoMeioB);
-                ordemTrianguo.Add(pontoA);
-
-                ordemTrianguo.Add(pontoB);
-                ordemTrianguo.Add(pontoA);
-                ordemTrianguo.Add(pontoMeioB);
-
+         
             }
             ordemTrianguo.Reverse();
 
@@ -236,8 +261,8 @@ namespace Ageral
 
             for (int x = 1; x < pontosAuxiliares.Count - 1; x++)
             {
-                Vector3 AB = Vector3.Lerp(pontosAuxiliares[x - 1], pontosAuxiliares[x], Suavização);
-                AB = Vector3.Lerp(AB, pontosAuxiliares[x + 1], Suavização);
+                Vector3 AB = Vector3.Lerp(pontosAuxiliares[x - 1], pontosAuxiliares[x], Suavizacao);
+                AB = Vector3.Lerp(AB, pontosAuxiliares[x + 1], Suavizacao);
 
                 pontosAuxiliares[x] = AB;
             }
@@ -247,20 +272,20 @@ namespace Ageral
 
             for (int x = 1; x < lista.Count - 1; x++)
             {
-                Vector3 AB = Vector3.Lerp(lista[x - 1], lista[x], Suavização);
-                AB = Vector3.Lerp(AB, lista[x + 1], Suavização);
+                Vector3 AB = Vector3.Lerp(lista[x - 1], lista[x], Suavizacao);
+                AB = Vector3.Lerp(AB, lista[x + 1], Suavizacao);
 
                 lista[x] = AB;
             }
             return lista;
         }
-        public int QuantidadeDeAmostragem, AnguloAgudo;
+      
         public void suavizacaoAutomatica()
         {
             for (int x = 0; x < pontosAuxiliares.Count - 1; x++)
             {
                 List<Vector3> TempVertices = new List<Vector3>();
-                for (int z = 0; z < QuantidadeDeAmostragem; z++)
+                for (int z = 0; z < QuantidadeDeAmostragemParaSuavizacaoAutomatica; z++)
                 {
                     if (x + z > pontosAuxiliares.Count - 1)
                         break;
@@ -277,35 +302,125 @@ namespace Ageral
                 }
             }
         }
+        public void simplificar()
+        {
+            pontosAuxiliares = ValoresUniversais.OptimizePath(pontosAuxiliares, DiminuirEmRetas);
+        }
+        public void removerArvores()
+        {
+            //  acessar as classes de floresta
+            // adicionar um box colider do tamanho da estrada
+            // cirar uma mesh do tamanho que vai ser retirado as arores
+            // verificar cada ponto das arvores tem distancia do menor caminho da mesh <0.1f
+            // remover o ponto da lista de arvores
+            // re-renderizar as arvores
+
+            float pontoMaximoX = pontosAuxiliares[0].x, pontominimoX = pontosAuxiliares[0].x, pontomaximoY = pontosAuxiliares[0].x,
+                pontominimoY = pontosAuxiliares[0].x;
+            for(int x = 0;x  < pontosAuxiliares.Count;x++)
+            {
+                if (pontoMaximoX < pontosAuxiliares[x].x)
+                    pontoMaximoX = pontosAuxiliares[x].x;
+
+                if (pontominimoX > pontosAuxiliares[x].x)
+                    pontominimoX = pontosAuxiliares[x].x;
+
+                if (pontomaximoY < pontosAuxiliares[x].z)
+                    pontomaximoY = pontosAuxiliares[x].z;
+
+                if (pontominimoY > pontosAuxiliares[x].z)
+                    pontominimoY = pontosAuxiliares[x].z;
+            }
+         
+            Vector3 TamanhoCaixa =  new Vector3(pontoMaximoX-pontominimoX,100,pontomaximoY-pontominimoY);
+           
+            List<Collider> FlorestarCOlididas = Physics.OverlapBox(transform.position, TamanhoCaixa, Quaternion.identity, layerDaFloresta).ToList();
+            //   lmp.criarMalhaParaRemover(pontosAuxiliares);
+            FlorestarCOlididas.RemoveAll(x => x == null);
+            if (FlorestarCOlididas.Count != 0) {
+              
+                foreach(Collider a in FlorestarCOlididas)
+                {
+                    GerenciadorFloresta aux = a.GetComponent<GerenciadorFloresta>();
+                          
+                    for (int x= 0; x < aux.arvores_g.Count; x++)
+                    {
+                      
+                        lmp.TestarERemover(aux.arvores_g[x]);
+                    }
+                    aux.arvores_g.RemoveAll(x => x == null);
+                }
+            }
+          
+        }
     }
-    #endregion
 
     [CustomEditor(typeof(gerenciadorDeEstradas))]
     public class EditorgerenciadorDeEstradas : Editor
     {
+        public SerializedProperty espessura, layerDaFloresta, escala,suavizacao,DiminuirEmRetas,AdicionarPoliACadaXDistancia,AnguloAgudo, QuantidadeDeAmostragemParaSuavizacaoAutomatica;
 
+        void OnEnable()
+        {
+            espessura = serializedObject.FindProperty("espessura");
+            escala = serializedObject.FindProperty("escala");
+
+            suavizacao = serializedObject.FindProperty("Suavizacao");
+
+            DiminuirEmRetas = serializedObject.FindProperty("DiminuirEmRetas");
+
+            AdicionarPoliACadaXDistancia = serializedObject.FindProperty("AdicionarPoligonosACadaXDistancia");
+
+            AnguloAgudo = serializedObject.FindProperty("AnguloAgudo");
+            QuantidadeDeAmostragemParaSuavizacaoAutomatica = serializedObject.FindProperty("QuantidadeDeAmostragemParaSuavizacaoAutomatica");
+
+            layerDaFloresta = serializedObject.FindProperty("layerDaFloresta");
+            gerenciadorDeEstradas meuScript = (gerenciadorDeEstradas)target;
+            if (meuScript.lmp == null)
+            {
+                if (meuScript.GetComponentInChildren<LimparArea>() != null)
+                {
+                    meuScript.lmp = meuScript.GetComponentInChildren<LimparArea>();
+                }
+                else
+                {
+                    GameObject a = new GameObject("limpador De Area");
+                    a.transform.parent = meuScript.transform;
+                    a.transform.position = meuScript.transform.position;
+                    meuScript.lmp = a.AddComponent<LimparArea>();
+                    a.GetComponent<LimparArea>().TamanhoParaRemover = 30;
+                    a.GetComponent<LimparArea>().trl = a.AddComponent<triangulador>();
+
+                }
+            }
+        }
         public override void OnInspectorGUI()
         {
             gerenciadorDeEstradas meuScript = (gerenciadorDeEstradas)target;
-            base.OnInspectorGUI();
 
+            serializedObject.Update();
 
             if (GUILayout.Button("Adicionar Vertice"))
             {
 
                 meuScript.AdicionarVertice();
             }
+            if (GUILayout.Button("DiminuirVectice Vertice"))
+            {
+
+                meuScript.DiminuirVertice();
+            }
+            EditorGUILayout.PropertyField(layerDaFloresta, new GUIContent("layerDaFloresta da floresta"));
+            EditorGUILayout.PropertyField(espessura, new GUIContent("Espessura da rua"));
+            EditorGUILayout.PropertyField(escala, new GUIContent("Distancia relativa entre os vertices"));
+
             if (GUILayout.Button("Gerar estrada"))
             {
 
                 meuScript.gerarEstrada();
             }
 
-            if (GUILayout.Button("desativar guizmo"))
-            {
-
-                meuScript.dstvgz = !meuScript.dstvgz;
-            }
+           
             if (GUILayout.Button("Gerar Malha"))
             {
 
@@ -313,20 +428,54 @@ namespace Ageral
                 meuScript.criarMalha();
 
             }
-            if (GUILayout.Button("suavizar Malha"))
-            {
-                meuScript.suavisarMalha();
-            }
-
+            
+                 EditorGUILayout.PropertyField(AdicionarPoliACadaXDistancia, new GUIContent("Escala para adicionar poligonos"));
             if (GUILayout.Button("Adicionar poligonos na Malha"))
             {
                 meuScript.adicionarPoligonos();
+
+                meuScript.renderizarMesh();
+                meuScript.criarMalha();
             }
+            
+
+                EditorGUILayout.PropertyField(AnguloAgudo, new GUIContent("Valor de angulo para ser agudo"));
+            EditorGUILayout.PropertyField(suavizacao, new GUIContent("Forca de suavizacao AC em B"));
+            
+             EditorGUILayout.PropertyField(QuantidadeDeAmostragemParaSuavizacaoAutomatica, new GUIContent("Quantidade de vertices para suavizar a malha"));
+
             if (GUILayout.Button("Suavização automatica"))
             {
 
                 meuScript.suavizacaoAutomatica();
-                    }
+
+                meuScript.renderizarMesh();
+                meuScript.criarMalha();
+            }
+
+                 EditorGUILayout.PropertyField(DiminuirEmRetas, new GUIContent("Valor para considerar Se o ponto C em relação a AB é reto"));
+            if (GUILayout.Button("simplificar malha"))
+            {
+
+                meuScript.simplificar();
+
+                meuScript.renderizarMesh();
+                meuScript.criarMalha();
+            }
+
+            if (GUILayout.Button("desativar guizmo"))
+            {
+
+                meuScript.dstvgz = !meuScript.dstvgz;
+            }
+            if (GUILayout.Button("Tirar Arvores"))
+            {
+          
+                meuScript.removerArvores();
+
+
+            }
+            serializedObject.ApplyModifiedProperties();
         }
 
         private void OnSceneGUI()
@@ -373,3 +522,13 @@ namespace Ageral
         }
     }
 }
+
+/*
+ * espessura
+ * escala
+ * suavização
+ * diminuir em retas
+ * adicionar poligonos a cada xdistancia
+ * angulo agudo
+ * 
+ */

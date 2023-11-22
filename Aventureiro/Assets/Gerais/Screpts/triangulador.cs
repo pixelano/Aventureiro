@@ -132,11 +132,11 @@ public class triangulador : MonoBehaviour
             
             foreach (Ponto a in pontos)
             {
-
+                List<Ponto> auxA = new List<Ponto>();
                 foreach (Ponto b in a.conexoes)
                 {
                     // de A para B
-
+                   
                     foreach (Ponto C in pontos)
                     {
                         if (C == a || C == b)
@@ -144,15 +144,17 @@ public class triangulador : MonoBehaviour
                       
                             if (!LinhasCruzam(a.posicao,b.posicao, a.posicao, C.posicao))
                             {
-                                a.conexoes.Add(C);
+                            auxA.Add(C);
                                 C.conexoes.Add(a);
 
                             }
 
                        
                     }
+                   
 
                 }
+                a.conexoes.AddRange(auxA);
             }
 
           
@@ -243,38 +245,55 @@ public class triangulador : MonoBehaviour
 
             return false;
         }
-        bool PontoDentroTriangulo(Vector2 A, Vector2 B1, Vector2 B2, Vector2 B3)
+      public  bool PontoDentroTriangulo(Vector2 A, Vector2 B1, Vector2 B2, Vector2 B3)
         {
-            // Calcula as coordenadas baricêntricas do ponto A em relação ao triângulo B1, B2, B3
-     
             float u, v, w;
-
- 
             CalculaCoordenadasBaricentricas(A, B1, B2, B3, out u, out v, out w);
-
-            // Adiciona a margem de tolerância
-     
-
-            
-            // Verifica se o ponto A está dentro do triângulo
-            //       ok         ok      ok                  ok 
              return u >= 0 && v >= 0 && w >= 0 && (u + v + w) <= (1.1f );
-         //   return (u + v + w) !=(1);
+        }
+        public  bool PontoDentroTriangulo(Vector3 A_, Vector3 B1_, Vector3 B2_, Vector3 B3_)
+        {
+            //   Vector2 A = new Vector2(A_.x - B1_.x, A_.z - B1_.z);
+
+            //  Vector2 B1 = new Vector2(B1_.x - transform.position.x, B1_.z - transform.position.z);
+            //  Vector2 B2 = new Vector2(B2_.x - transform.position.x, B2_.z - transform.position.z);
+            //  Vector2 B3 = new Vector2(B3_.x - transform.position.x, B3_.z - transform.position.z);
+
+              Vector2 A = new Vector2(A_.x, A_.z).normalized;
+
+              Vector2 B1 = new Vector2(B1_.x , B1_.z ).normalized;
+              Vector2 B2 = new Vector2(B2_.x , B2_.z ).normalized;
+              Vector2 B3 = new Vector2(B3_.x , B3_.z ).normalized;
+
+
+
+
+
+            float u, v, w;
+            CalculaCoordenadasBaricentricas(A, B1, B2, B3, out u, out v, out w);
+            Debug.Log(u + " " + v + " " + w);
+            return u >= 0 && v >= 0 && w >= 0 && (u + v + w) <= (2f);
         }
 
         // Calcula as coordenadas baricêntricas do ponto P em relação ao triângulo A, B, C
-       void CalculaCoordenadasBaricentricas(Vector2 P, Vector2 A, Vector2 B, Vector2 C, out float u, out float v, out float w)
+        static void CalculaCoordenadasBaricentricas(Vector2 P, Vector2 A, Vector2 B, Vector2 C, out float u, out float v, out float w)
         {
-            Vector2 v0 = B - A, v1 = C - A, v2 = P - A;
+            Debug.Log("------------------------------");
+            Vector2 v0 = B - A,
+                v1 = C - A,
+                v2 = P - A;
+            Debug.Log(v0 + " " + v1 + " " + v2);
             float d00 = Vector2.Dot(v0, v0); // 1
             float d01 = Vector2.Dot(v0, v1); // 1   
             float d11 = Vector2.Dot(v1, v1); // 5
             float d20 = Vector2.Dot(v2, v0); //0.5
             float d21 = Vector2.Dot(v2, v1); //1.5
             float denom = d00 * d11 - d01 * d01; //  4  =  1 * 5 - 1 *1
+          //   Debug.Log("d00 " + d00 + ";  d01 " + d01 + "; d11 " + d11 + "; d20 " + d20 + "; d21 " + d21 + " ; denom  " + denom);
             v = (d11 * d20 - d01 * d21) / denom; //v   0.25  1/4   = 5 * 0.5 - 1 * 1.5
             w = (d00 * d21 - d01 * d20) / denom; //w  0.25    = 1.5 - 0.5
             u = 1.0f - v - w;                    //u   0.5     =  1 - 0,5
+          //  Debug.Log("-----------------------");
         }
 
 
