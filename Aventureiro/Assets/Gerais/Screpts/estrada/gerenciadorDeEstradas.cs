@@ -36,7 +36,7 @@ namespace Ageral
         public List<Vector3> pontosAuxiliares = new List<Vector3>();
     public void AdicionarVertice()
         {
-            pontosdaEstrada.Add(transform.position);
+            pontosdaEstrada.Add(pontosdaEstrada[pontosdaEstrada.Count -1] + transform.forward * 20);
         }
         public void DiminuirVertice()
         {
@@ -335,19 +335,56 @@ namespace Ageral
             Vector3 TamanhoCaixa =  new Vector3(pontoMaximoX-pontominimoX,100,pontomaximoY-pontominimoY);
            
             List<Collider> FlorestarCOlididas = Physics.OverlapBox(transform.position, TamanhoCaixa, Quaternion.identity, layerDaFloresta).ToList();
-            //   lmp.criarMalhaParaRemover(pontosAuxiliares);
+          //   lmp.criarMalhaParaRemover(pontosAuxiliares);
+
             FlorestarCOlididas.RemoveAll(x => x == null);
             if (FlorestarCOlididas.Count != 0) {
               
                 foreach(Collider a in FlorestarCOlididas)
                 {
                     GerenciadorFloresta aux = a.GetComponent<GerenciadorFloresta>();
-                          
+                    List<GameObject> removerEstes = new List<GameObject>();
+                   
                     for (int x= 0; x < aux.arvores_g.Count; x++)
                     {
-                      
-                        lmp.TestarERemover(aux.arvores_g[x]);
+                  
+                        for( int vt = 0; vt < pontosAuxiliares.Count; vt++)
+                        {
+                            
+                            if(vt < pontosAuxiliares.Count - 2)
+                            {
+                                if (Vector3.Distance(pontosAuxiliares[vt], pontosAuxiliares[vt + 1]) > 30)
+                                {
+                                    float distMeio = Vector3.Distance((((pontosAuxiliares[vt + 1] - pontosAuxiliares[vt]) / 2) + pontosAuxiliares[vt]), aux.arvores_g[x].transform.position);
+                                
+                                if(distMeio < 30)
+                                    {
+                                        removerEstes.Add(aux.arvores_g[x]);
+
+                                    }
+                                }
+                            }
+
+                            float dist = Vector3.Distance(pontosAuxiliares[vt], aux.arvores_g[x].transform.position);
+                            if(dist < 30)
+                            {
+                              
+                                    removerEstes.Add(aux.arvores_g[x]);
+                                   
+                                    break;
+                               
+                                
+                            }
+                        }
+
+                       // lmp.TestarERemover(aux.arvores_g[x]);
                     }
+                    removerEstes.RemoveAll(x => x == null);
+                    for (int ll = 0; ll < removerEstes.Count; ll++)
+                    {
+                        DestroyImmediate(removerEstes[ll]);
+                    }
+
                     aux.arvores_g.RemoveAll(x => x == null);
                 }
             }
@@ -397,9 +434,9 @@ namespace Ageral
         public override void OnInspectorGUI()
         {
             gerenciadorDeEstradas meuScript = (gerenciadorDeEstradas)target;
-
+            EditorGUI.BeginChangeCheck();
             serializedObject.Update();
-
+            
             if (GUILayout.Button("Adicionar Vertice"))
             {
 
@@ -410,7 +447,12 @@ namespace Ageral
 
                 meuScript.DiminuirVertice();
             }
-            EditorGUILayout.PropertyField(layerDaFloresta, new GUIContent("layerDaFloresta da floresta"));
+            if (EditorGUI.EndChangeCheck())
+            {
+           
+                serializedObject.ApplyModifiedProperties();
+            }
+                EditorGUILayout.PropertyField(layerDaFloresta, new GUIContent("layerDaFloresta da floresta"));
             EditorGUILayout.PropertyField(espessura, new GUIContent("Espessura da rua"));
             EditorGUILayout.PropertyField(escala, new GUIContent("Distancia relativa entre os vertices"));
 
