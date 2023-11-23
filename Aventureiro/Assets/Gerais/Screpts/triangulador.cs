@@ -278,11 +278,11 @@ public class triangulador : MonoBehaviour
         // Calcula as coordenadas baricêntricas do ponto P em relação ao triângulo A, B, C
         static void CalculaCoordenadasBaricentricas(Vector2 P, Vector2 A, Vector2 B, Vector2 C, out float u, out float v, out float w)
         {
-            Debug.Log("------------------------------");
+         
             Vector2 v0 = B - A,
                 v1 = C - A,
                 v2 = P - A;
-            Debug.Log(v0 + " " + v1 + " " + v2);
+         
             float d00 = Vector2.Dot(v0, v0); // 1
             float d01 = Vector2.Dot(v0, v1); // 1   
             float d11 = Vector2.Dot(v1, v1); // 5

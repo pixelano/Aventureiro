@@ -81,7 +81,7 @@ public void executarAtaque()
 
                 aux_caminhando = false;
                 atacando = false;
-                distancia = 1;
+                distancia = 0.1f;
               
 
             }

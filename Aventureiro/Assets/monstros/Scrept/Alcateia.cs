@@ -134,11 +134,11 @@ namespace montros
                 frontLine.RemoveAll(x => x.movimento == null);
                 if (alvoNaArea())
                 {
-                    Debug.Log("caçando");
+                  
                     if (frontLine.Count > 0)
                     {
 
-                        int inicialFront = 1;
+                    
                         int quantidadePorLado = (int)(frontLine.Count / 2);
 
 
@@ -147,12 +147,16 @@ namespace montros
                         frontLine[0].alvo = alvo;
 
 
-                        float anguloCada = 90f / quantidadePorLado + inicialFront; // Corrigindo o cálculo do ângulo em graus
+                        float anguloCada = 90f / quantidadePorLado+2 ; // Corrigindo o cálculo do ângulo em graus
 
                         for (int x = -1; x < 2; x += 2)
                         {
-                            for (int y = inicialFront; y < quantidadePorLado + inicialFront; y++)
+                            for (int y = 0; y < quantidadePorLado ; y++)
                             {
+                                if (frontLine[((x < 0 ? 0 : 1) * quantidadePorLado) + y].anima == null)
+                                {
+                                    continue;
+                                }
 
                                 if (Vector3.Distance(frontLine[((x < 0 ? 0 : 1) * quantidadePorLado) + y].movimento.transform.position, alvo.transform.position) < 20)
                                 {
@@ -176,8 +180,8 @@ namespace montros
                                     }
                                     catch
                                     {
-                                        frontLine[frontLine.Count - inicialFront].posicao = posi;
-                                        frontLine[frontLine.Count - inicialFront].alvo = alvo;
+                                        frontLine[frontLine.Count - 1].posicao = posi;
+                                        frontLine[frontLine.Count - 1].alvo = alvo;
                                         continue;
                                     }
                                 }

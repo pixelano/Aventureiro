@@ -19,13 +19,13 @@ namespace JogadorA
             if (aux_tempoDeRecarga <= 0)
             {
                 aux_tempoDeRecarga = tempodeRecarga;
-                if (Input.GetMouseButton(0))
+                if (Input.GetMouseButtonDown(0))
                 {
                     RaycastHit hit;
                     Physics.BoxCast(transform.position, Vector3.one / 2, transform.forward, out hit, Quaternion.identity, disntacia, layer);
                     if (hit.collider != null)
                     {
-                        GerenciadoDeVida aux = hit.collider.GetComponent<GerenciadoDeVida>();
+                        GerenciadoDeVida aux = hit.collider.GetComponentInChildren<GerenciadoDeVida>();
                         if (aux != null)
                         {
                             aux.diminuirVida(1);

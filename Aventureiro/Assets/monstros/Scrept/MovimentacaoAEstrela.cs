@@ -160,7 +160,7 @@ namespace montros
             }
             distandiaDoAlvo = Vector3.Distance(transform.position, target);
             correndo = distandiaDoAlvo > DistanciaParaCorrer;
-auxVelocidade =Mathf.Lerp(auxVelocidade,(distandiaDoAlvo <= distanciaParaDiminuirVelocidade ? ValoresUniversais.VelocidadeDeCaminhadaPortePequeno : ValoresUniversais.VelocidadeDeCaminhadaPortePequeno),
+auxVelocidade =Mathf.Lerp(auxVelocidade,(distandiaDoAlvo <= distanciaParaDiminuirVelocidade ? ValoresUniversais.VelocidadeDeCaminhadaPortePequeno + 3 : ValoresUniversais.VelocidadeDeCaminhadaPortePequeno),
     0.5f);
             caminhando_ = caminho.Count == 0 ? false : distandiaDoAlvo <= 1 ? false : true;
             if (correndo)

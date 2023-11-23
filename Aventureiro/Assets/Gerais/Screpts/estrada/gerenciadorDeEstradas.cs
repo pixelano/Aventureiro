@@ -32,11 +32,25 @@ namespace Ageral
         public LayerMask layerDaFloresta;
         public LimparArea lmp;
 
+        //
+        public bool RuaFechada;
+
         public List<Vector3> pontosdaEstrada = new List<Vector3>();
         public List<Vector3> pontosAuxiliares = new List<Vector3>();
-    public void AdicionarVertice()
+
+        public List<gerenciadorDeEstradas> bifurcacaoEntrada = new List<gerenciadorDeEstradas>();
+        public List<gerenciadorDeEstradas> bifurcacaoSaida = new List<gerenciadorDeEstradas>();
+        public gerenciadorDeEstradas auxGerenciadorEstradas;
+        public void AdicionarVertice()
         {
-            pontosdaEstrada.Add(pontosdaEstrada[pontosdaEstrada.Count -1] + transform.forward * 20);
+            if (pontosdaEstrada.Count >1)
+            {
+                pontosdaEstrada.Add(pontosdaEstrada[pontosdaEstrada.Count - 1] + transform.forward * 20);
+            }
+            else
+            {
+                pontosdaEstrada.Add(transform.position + transform.forward * 20);
+            }
         }
         public void DiminuirVertice()
         {
@@ -70,7 +84,7 @@ namespace Ageral
                         Vector3 eleQuerIr = pontoC - pontoA;
 
                         orientacao = ValoresUniversais.Orientacao3(pontoA,pontoB,pontoC);
-                        Debug.Log("foi "+ orientacao + " em " + y);
+                       
                     }
                     catch { }
                     
@@ -131,7 +145,7 @@ namespace Ageral
         public Color cor;
 
         private void Start()
-        {
+        {/*
             if (lmp == null)
             {
                 if(GetComponentInChildren<LimparArea>() != null)
@@ -150,7 +164,7 @@ namespace Ageral
 
                 }
             }
-        }
+        */}
         public List<Vector3> ordemTrianguo = new List<Vector3>();
         public void renderizarMesh()
         {
@@ -187,12 +201,21 @@ namespace Ageral
 
          
             }
+            if (RuaFechada)
+            {
+                int qu = ordemTrianguo.Count - 1;
+                ordemTrianguo[qu] = ordemTrianguo[0];
+                ordemTrianguo[qu-4] = ordemTrianguo[0];
+                ordemTrianguo[qu - 2] = ordemTrianguo[2];
+
+            }
             ordemTrianguo.Reverse();
 
             for(int x = 0; x < ordemTrianguo.Count; x++)
             {
                 ordemTrianguo[x] -= transform.position;
             }
+
         }
 
         public Mesh mesh;
@@ -390,12 +413,83 @@ namespace Ageral
             }
           
         }
+        public void adicionarEstrada() {
+            // ache o ponto de entrada mais proximo do primei ponto de entrada da proxima estrada
+
+         
+           
+            Vector3 primeiroPontoDeEntradaDaNovaEstrada = auxGerenciadorEstradas.pontosAuxiliares[0];
+            float menorDistancia = Vector3.Distance(primeiroPontoDeEntradaDaNovaEstrada, pontosAuxiliares[0]);
+            int indicemenor      = 0;
+            for (int x= 0; x < pontosAuxiliares.Count; x++)
+            {
+                float aux = Vector3.Distance(pontosAuxiliares[x], primeiroPontoDeEntradaDaNovaEstrada);
+                
+                if (menorDistancia > aux)
+                {
+                    menorDistancia = aux;
+                    indicemenor = x;
+                }
+            }
+
+            //      ligar o primeiro da nova estrada se conectar com o mais proximo do atual
+            List<Vector3> auxPontos = new List<Vector3>();
+            Debug.Log(indicemenor);
+            auxPontos.Add(pontosAuxiliares[indicemenor]);
+            auxPontos.AddRange(auxGerenciadorEstradas.pontosAuxiliares);
+            auxGerenciadorEstradas.pontosAuxiliares.Clear();
+            auxGerenciadorEstradas.pontosAuxiliares.AddRange(auxPontos);
+            // recalcular o auxgern
+            // remoldar o primeiro para que se conecte com o mais proximo
+
+           // auxGerenciadorEstradas.gerarEstrada();
+           
+
+            auxGerenciadorEstradas.pontosAuxiliares[0] = pontosAuxiliares[indicemenor];
+            auxGerenciadorEstradas.renderizarMesh();
+            auxGerenciadorEstradas.criarMalha();
+
+            auxGerenciadorEstradas = null;
+           
+        }
+        public void removerEstrada()
+        {
+
+            Vector3 primeiroPontoDeEntradaDaNovaEstrada = auxGerenciadorEstradas.pontosAuxiliares[auxGerenciadorEstradas.pontosAuxiliares.Count-1];
+            float menorDistancia = Vector3.Distance(primeiroPontoDeEntradaDaNovaEstrada, pontosAuxiliares[0]);
+            int indicemenor = 0;
+            for (int x = 0; x < pontosAuxiliares.Count; x++)
+            {
+                float aux = Vector3.Distance(pontosAuxiliares[x], primeiroPontoDeEntradaDaNovaEstrada);
+
+                if (menorDistancia > aux)
+                {
+                    menorDistancia = aux;
+                    indicemenor = x;
+                }
+            }
+
+            //      ligar o primeiro da nova estrada se conectar com o mais proximo do atual
+        
+            auxGerenciadorEstradas.pontosAuxiliares.Add(pontosAuxiliares[indicemenor]);
+            // recalcular o auxgern
+            // remoldar o primeiro para que se conecte com o mais proximo
+
+            // auxGerenciadorEstradas.gerarEstrada();
+
+
+            auxGerenciadorEstradas.pontosAuxiliares[auxGerenciadorEstradas.pontosAuxiliares.Count -1] = pontosAuxiliares[indicemenor];
+            auxGerenciadorEstradas.renderizarMesh();
+            auxGerenciadorEstradas.criarMalha();
+
+            auxGerenciadorEstradas = null;
+        }
     }
 
     [CustomEditor(typeof(gerenciadorDeEstradas))]
     public class EditorgerenciadorDeEstradas : Editor
     {
-        public SerializedProperty espessura, layerDaFloresta, escala,suavizacao,DiminuirEmRetas,AdicionarPoliACadaXDistancia,AnguloAgudo, QuantidadeDeAmostragemParaSuavizacaoAutomatica;
+        public SerializedProperty pontosdaEstrada, auxGerenciadorEstradas,espessura, layerDaFloresta, escala,suavizacao,DiminuirEmRetas,AdicionarPoliACadaXDistancia,AnguloAgudo, QuantidadeDeAmostragemParaSuavizacaoAutomatica;
 
         void OnEnable()
         {
@@ -412,7 +506,11 @@ namespace Ageral
             QuantidadeDeAmostragemParaSuavizacaoAutomatica = serializedObject.FindProperty("QuantidadeDeAmostragemParaSuavizacaoAutomatica");
 
             layerDaFloresta = serializedObject.FindProperty("layerDaFloresta");
+
+            auxGerenciadorEstradas = serializedObject.FindProperty("auxGerenciadorEstradas");
+            pontosdaEstrada = serializedObject.FindProperty("pontosdaEstrada");
             gerenciadorDeEstradas meuScript = (gerenciadorDeEstradas)target;
+          /*
             if (meuScript.lmp == null)
             {
                 if (meuScript.GetComponentInChildren<LimparArea>() != null)
@@ -429,7 +527,7 @@ namespace Ageral
                     a.GetComponent<LimparArea>().trl = a.AddComponent<triangulador>();
 
                 }
-            }
+            }*/
         }
         public override void OnInspectorGUI()
         {
@@ -447,6 +545,7 @@ namespace Ageral
 
                 meuScript.DiminuirVertice();
             }
+            EditorGUILayout.Space();
             if (EditorGUI.EndChangeCheck())
             {
            
@@ -465,13 +564,14 @@ namespace Ageral
            
             if (GUILayout.Button("Gerar Malha"))
             {
-
+                
                 meuScript.renderizarMesh();
                 meuScript.criarMalha();
 
             }
-            
-                 EditorGUILayout.PropertyField(AdicionarPoliACadaXDistancia, new GUIContent("Escala para adicionar poligonos"));
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(AdicionarPoliACadaXDistancia, new GUIContent("Escala para adicionar poligonos"));
             if (GUILayout.Button("Adicionar poligonos na Malha"))
             {
                 meuScript.adicionarPoligonos();
@@ -479,9 +579,9 @@ namespace Ageral
                 meuScript.renderizarMesh();
                 meuScript.criarMalha();
             }
-            
+            EditorGUILayout.Space();
 
-                EditorGUILayout.PropertyField(AnguloAgudo, new GUIContent("Valor de angulo para ser agudo"));
+            EditorGUILayout.PropertyField(AnguloAgudo, new GUIContent("Valor de angulo para ser agudo"));
             EditorGUILayout.PropertyField(suavizacao, new GUIContent("Forca de suavizacao AC em B"));
             
              EditorGUILayout.PropertyField(QuantidadeDeAmostragemParaSuavizacaoAutomatica, new GUIContent("Quantidade de vertices para suavizar a malha"));
@@ -504,19 +604,43 @@ namespace Ageral
                 meuScript.renderizarMesh();
                 meuScript.criarMalha();
             }
-
+            EditorGUILayout.Space();
             if (GUILayout.Button("desativar guizmo"))
             {
 
                 meuScript.dstvgz = !meuScript.dstvgz;
             }
+            EditorGUILayout.Space();
             if (GUILayout.Button("Tirar Arvores"))
             {
-          
                 meuScript.removerArvores();
-
-
             }
+            EditorGUILayout.Space();
+            EditorGUILayout.Space();
+            EditorGUILayout.Space();
+            GUILayout.Label("é uma rua fechada ?");
+            if (GUILayout.Button("Fechar rua"))
+            {
+            
+               
+                meuScript.RuaFechada = !meuScript.RuaFechada;
+                if (meuScript.RuaFechada)
+                    meuScript.pontosAuxiliares[meuScript.pontosAuxiliares.Count - 1] = meuScript.pontosAuxiliares[0];
+                meuScript.renderizarMesh();
+                meuScript.criarMalha();
+            }
+            EditorGUILayout.PropertyField(auxGerenciadorEstradas, new GUIContent("A estrada em questao : "));
+
+            if (GUILayout.Button("adicionar entrada de bifurcacao"))
+            {
+                meuScript.adicionarEstrada();
+            }
+            if (GUILayout.Button("Adicionar Saida de Bifurcacao"))
+            {
+                meuScript.removerEstrada();
+            }
+            EditorGUILayout.PropertyField(pontosdaEstrada, new GUIContent("lista de entradas : "));
+
             serializedObject.ApplyModifiedProperties();
         }
 

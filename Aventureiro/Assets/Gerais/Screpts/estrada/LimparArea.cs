@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using teste;
 using UnityEditor;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine.Rendering;
 namespace Ageral
 {
     public class LimparArea : MonoBehaviour
-    {
+    {/*
         public List<Vector3> ListaVertices = new List<Vector3>();
         public GerenciadorFloresta grf;
         public triangulador trl;
@@ -159,7 +160,7 @@ namespace Ageral
         public void TestarERemover(GameObject P)
         {
             // aresta AB para P  !=  aresta AC para P
-
+           /*
             for(int x = 0; x < ordemTrianguo.Count /3; x++)
             {
                 if (P == null)
@@ -183,7 +184,9 @@ namespace Ageral
 
 
             }
+          
 
+          
         }
 
     }
@@ -253,5 +256,6 @@ namespace Ageral
 
 
         }
-
+        */
+    }
 }
