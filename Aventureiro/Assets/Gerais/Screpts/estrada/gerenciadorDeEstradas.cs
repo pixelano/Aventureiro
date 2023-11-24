@@ -1,4 +1,6 @@
+using Codice.Client.Common.GameUI;
 using log4net.Util;
+using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +18,7 @@ namespace Ageral
 {
     public class gerenciadorDeEstradas : MonoBehaviour
     {
+        #region Sistema de Ligar ruas
         public float espessura = 5;
         public float escala = 5;
         public int AnguloAgudo = 45;
@@ -33,7 +36,7 @@ namespace Ageral
         public LimparArea lmp;
 
         //
-        public bool RuaFechada;
+        public bool RuaFechada = false;
 
         public List<Vector3> pontosdaEstrada = new List<Vector3>();
         public List<Vector3> pontosAuxiliares = new List<Vector3>();
@@ -63,7 +66,8 @@ namespace Ageral
             pontosAuxiliares.Clear();
             // criar pontos auxiliares entre A e B
             // angulo formado de A para B ?
-         
+            if (entrada)
+                pontosAuxiliares.Add(entrada.pontosAuxiliares[indiceEntrada]);
             Vector3 ultimoPonto = pontosdaEstrada[0];
             for (int y = 0; y < pontosdaEstrada.Count; y++)
             {
@@ -137,6 +141,8 @@ namespace Ageral
             }
 
             pontosAuxiliares.Add(pontosdaEstrada[pontosdaEstrada.Count - 1] );
+            if (saida)
+                pontosAuxiliares.Add(saida.pontosAuxiliares[indiceSaida]);
 
 
 
@@ -413,76 +419,178 @@ namespace Ageral
             }
           
         }
-        public void adicionarEstrada() {
+        public void adicionarEstradaEntrada(gerenciadorDeEstradas aux_) {
             // ache o ponto de entrada mais proximo do primei ponto de entrada da proxima estrada
 
          
            
-            Vector3 primeiroPontoDeEntradaDaNovaEstrada = auxGerenciadorEstradas.pontosAuxiliares[0];
-            float menorDistancia = Vector3.Distance(primeiroPontoDeEntradaDaNovaEstrada, pontosAuxiliares[0]);
-            int indicemenor      = 0;
-            for (int x= 0; x < pontosAuxiliares.Count; x++)
+            Vector3 primeiroPontoDeEntradaDaNovaEstrada = pontosAuxiliares[0];
+         float menorDistancia = Vector3.Distance(primeiroPontoDeEntradaDaNovaEstrada, aux_.pontosAuxiliares[0]);
+          for (int x= 0; x < aux_.pontosAuxiliares.Count; x++)
             {
-                float aux = Vector3.Distance(pontosAuxiliares[x], primeiroPontoDeEntradaDaNovaEstrada);
+               float aux = Vector3.Distance(aux_.pontosAuxiliares[x], primeiroPontoDeEntradaDaNovaEstrada);
                 
                 if (menorDistancia > aux)
                 {
                     menorDistancia = aux;
-                    indicemenor = x;
+                    indiceEntrada = x;
                 }
             }
+     
 
             //      ligar o primeiro da nova estrada se conectar com o mais proximo do atual
             List<Vector3> auxPontos = new List<Vector3>();
-            Debug.Log(indicemenor);
-            auxPontos.Add(pontosAuxiliares[indicemenor]);
-            auxPontos.AddRange(auxGerenciadorEstradas.pontosAuxiliares);
-            auxGerenciadorEstradas.pontosAuxiliares.Clear();
-            auxGerenciadorEstradas.pontosAuxiliares.AddRange(auxPontos);
+        
+            auxPontos.Add(aux_.pontosAuxiliares[indiceEntrada]);
+            auxPontos.AddRange(pontosAuxiliares);
+           pontosAuxiliares.Clear();
+            pontosAuxiliares.AddRange(auxPontos);
             // recalcular o auxgern
             // remoldar o primeiro para que se conecte com o mais proximo
 
            // auxGerenciadorEstradas.gerarEstrada();
            
 
-            auxGerenciadorEstradas.pontosAuxiliares[0] = pontosAuxiliares[indicemenor];
-            auxGerenciadorEstradas.renderizarMesh();
-            auxGerenciadorEstradas.criarMalha();
+            pontosAuxiliares[0] = aux_.pontosAuxiliares[indiceEntrada];
+            renderizarMesh();
+            criarMalha();
 
-            auxGerenciadorEstradas = null;
-           
+            entrada = aux_;
+            aux_.conecxoes.Add(this);
+            conecxoes.Add(aux_);
+
+
         }
-        public void removerEstrada()
+        public void adicionarEstradaSaida(gerenciadorDeEstradas aux_)
         {
 
-            Vector3 primeiroPontoDeEntradaDaNovaEstrada = auxGerenciadorEstradas.pontosAuxiliares[auxGerenciadorEstradas.pontosAuxiliares.Count-1];
-            float menorDistancia = Vector3.Distance(primeiroPontoDeEntradaDaNovaEstrada, pontosAuxiliares[0]);
-            int indicemenor = 0;
-            for (int x = 0; x < pontosAuxiliares.Count; x++)
+            Vector3 primeiroPontoDeEntradaDaNovaEstrada = pontosAuxiliares[pontosAuxiliares.Count - 1];
+            float menorDistancia = Vector3.Distance(primeiroPontoDeEntradaDaNovaEstrada, aux_.pontosAuxiliares[0]);
+         
+            for (int x = 0; x < aux_.pontosAuxiliares.Count; x++)
             {
-                float aux = Vector3.Distance(pontosAuxiliares[x], primeiroPontoDeEntradaDaNovaEstrada);
+                float aux = Vector3.Distance(aux_.pontosAuxiliares[x], primeiroPontoDeEntradaDaNovaEstrada);
 
                 if (menorDistancia > aux)
                 {
                     menorDistancia = aux;
-                    indicemenor = x;
+                    indiceSaida = x;
                 }
             }
 
-            //      ligar o primeiro da nova estrada se conectar com o mais proximo do atual
+
+          
+           pontosAuxiliares.Add(aux_.pontosAuxiliares[indiceSaida]);
+    
+
+            pontosAuxiliares[pontosAuxiliares.Count - 1] = aux_.pontosAuxiliares[indiceSaida];
+            renderizarMesh();
+            criarMalha();
+            saida = aux_;
+            aux_.conecxoes.Add(this);
+            conecxoes.Add(aux_);
+
+   
+
+
+        }
+        #endregion
+        // criar sistema de estradas internas
+        #region sistema de Criar ruas internas
+        public List<gerenciadorDeEstradas> conecxoes = new List<gerenciadorDeEstradas>();
+        public gerenciadorDeEstradas entrada, saida;
+        int indiceEntrada, indiceSaida;
+   
+        public bool VerificarSeFechou()
+        {
+            bool aux = false;
+            if(entrada != null && saida != null)
+            {
+                if(entrada == saida)
+                {
+                    aux = true;
+                }
+                else
+                {
+                    List<gerenciadorDeEstradas> auxE = new List<gerenciadorDeEstradas>();
+                    auxE.Add(this);
+                    aux = (saida.aliteracaoVerificarPerimetro(entrada, auxE));
+                }
+            }
+            return aux;
+        }
         
-            auxGerenciadorEstradas.pontosAuxiliares.Add(pontosAuxiliares[indicemenor]);
-            // recalcular o auxgern
-            // remoldar o primeiro para que se conecte com o mais proximo
+        private bool aliteracaoVerificarPerimetro(gerenciadorDeEstradas alvo,List<gerenciadorDeEstradas> testados)
+        {
+            bool aux = false;
 
-            // auxGerenciadorEstradas.gerarEstrada();
+            if(entrada == alvo || saida == alvo)
+            {
+                aux = true;
+            }
+            else
+            {
+                testados.Add(this);
+                if (saida != null)
+                {
+                    if (!testados.Contains(entrada))
+                    {
+                        aux = saida.aliteracaoVerificarPerimetro(alvo, testados);
+                    }
+                }
+                if (entrada != null)
+                {
+                    if (!aux)
+                    {
+
+                        aux = entrada.aliteracaoVerificarPerimetro(alvo, testados);
+                    }
+                }
+            }
+            if(aux == false)
+            {
+                foreach(gerenciadorDeEstradas aa in conecxoes)
+                {
+                    if (aliteracaoVerificarPerimetro(alvo,testados))
+                    {
+                        aux = true;
+                        break;
+                    }
+                }
+            }
+            return aux;
+        }
+
+        public void CriarArea()
+        {
+            // é praticamente a mesma coisa da verificação mas tenho que pegar os pontosauxiliares de A para B de cada rua até chegar pra fechar
 
 
-            auxGerenciadorEstradas.pontosAuxiliares[auxGerenciadorEstradas.pontosAuxiliares.Count -1] = pontosAuxiliares[indicemenor];
-            auxGerenciadorEstradas.renderizarMesh();
-            auxGerenciadorEstradas.criarMalha();
+        }
+        #endregion 
+    }
+    public class areaQuadra {
 
-            auxGerenciadorEstradas = null;
+        [Tooltip("A porcentagem baseada no tamanho")]
+        [Range(0, 1)]
+        public float QuantidadeDeRuasPerimetro, QuantidadeDeConexoesInternas;
+        public List<Vector3> EntradasPerimetro = new List<Vector3>(), ConecxoesInternas = new List<Vector3>();
+
+
+
+
+        public void DefinirEntradasNoPerimetro()
+        {
+
+        }
+        public void DefinirConexoesInternas()
+        {
+
+        }
+
+        public void ConectarTudo()
+        {
+
         }
     }
 
@@ -490,9 +598,10 @@ namespace Ageral
     public class EditorgerenciadorDeEstradas : Editor
     {
         public SerializedProperty pontosdaEstrada, auxGerenciadorEstradas,espessura, layerDaFloresta, escala,suavizacao,DiminuirEmRetas,AdicionarPoliACadaXDistancia,AnguloAgudo, QuantidadeDeAmostragemParaSuavizacaoAutomatica;
-
+ 
         void OnEnable()
         {
+           
             espessura = serializedObject.FindProperty("espessura");
             escala = serializedObject.FindProperty("escala");
 
@@ -605,7 +714,7 @@ namespace Ageral
                 meuScript.criarMalha();
             }
             EditorGUILayout.Space();
-            if (GUILayout.Button("desativar guizmo"))
+            if (GUILayout.Button(meuScript.dstvgz ? "desativar guizmo" : "Ativar Guizmo"))
             {
 
                 meuScript.dstvgz = !meuScript.dstvgz;
@@ -619,29 +728,66 @@ namespace Ageral
             EditorGUILayout.Space();
             EditorGUILayout.Space();
             GUILayout.Label("é uma rua fechada ?");
-            if (GUILayout.Button("Fechar rua"))
-            {
-            
-               
-                meuScript.RuaFechada = !meuScript.RuaFechada;
+
+          
+
+                if (GUILayout.Button(meuScript.RuaFechada ? "Abrir rua" : "Fechar rua"))
+                {
+
+
+                    meuScript.RuaFechada = !meuScript.RuaFechada;
                 if (meuScript.RuaFechada)
+                {
                     meuScript.pontosAuxiliares[meuScript.pontosAuxiliares.Count - 1] = meuScript.pontosAuxiliares[0];
-                meuScript.renderizarMesh();
-                meuScript.criarMalha();
-            }
+
+                    meuScript.entrada = meuScript;
+                    meuScript.saida = meuScript;
+
+
+                }
+                else
+                {
+                    meuScript.pontosAuxiliares[meuScript.pontosAuxiliares.Count - 1] = meuScript.pontosdaEstrada[meuScript.pontosdaEstrada.Count - 1];
+                }
+                    meuScript.renderizarMesh();
+                    meuScript.criarMalha();
+                }
+          
+
             EditorGUILayout.PropertyField(auxGerenciadorEstradas, new GUIContent("A estrada em questao : "));
 
-            if (GUILayout.Button("adicionar entrada de bifurcacao"))
+            if (meuScript.auxGerenciadorEstradas != null)
             {
-                meuScript.adicionarEstrada();
+                if (GUILayout.Button("adicionar entrada de bifurcacao"))
+                {
+                    meuScript.adicionarEstradaEntrada(meuScript.auxGerenciadorEstradas);
+                }
+                if (GUILayout.Button("Adicionar Saida de Bifurcacao"))
+                {
+                    meuScript.adicionarEstradaSaida(meuScript.auxGerenciadorEstradas);
+                }
             }
-            if (GUILayout.Button("Adicionar Saida de Bifurcacao"))
+            EditorGUILayout.Space();
+           
+            if (meuScript.entrada != null && meuScript.saida != null)
             {
-                meuScript.removerEstrada();
-            }
-            EditorGUILayout.PropertyField(pontosdaEstrada, new GUIContent("lista de entradas : "));
+                if (GUILayout.Button("Criar novo bairro"))
+                {
+                    bool aux_ =(meuScript.VerificarSeFechou());
+                    if (aux_ == false)
+                    {
+                        Debug.Log("falhou em criar uma nova area");
+                    }
+                    else
+                    {
+                        meuScript.CriarArea();
 
-            serializedObject.ApplyModifiedProperties();
+                    }
+                }
+            }
+            
+
+                serializedObject.ApplyModifiedProperties();
         }
 
         private void OnSceneGUI()
