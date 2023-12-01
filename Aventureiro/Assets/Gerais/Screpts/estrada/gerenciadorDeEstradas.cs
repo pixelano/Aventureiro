@@ -62,12 +62,15 @@ namespace Ageral
         
 
         public void gerarEstrada()
-        {
+        { 
             pontosAuxiliares.Clear();
             // criar pontos auxiliares entre A e B
             // angulo formado de A para B ?
-            if (entrada)
-                pontosAuxiliares.Add(entrada.pontosAuxiliares[indiceEntrada]);
+            if (entrada != null)
+            {
+                if (entrada.ConecatacoComEste != null && RuaFechada == false)
+                    pontosAuxiliares.Add(entrada.ConecatacoComEste.pontosAuxiliares[entrada.INdiceDeleEmQueEstaConectadoEmMim]);
+            }
             Vector3 ultimoPonto = pontosdaEstrada[0];
             for (int y = 0; y < pontosdaEstrada.Count; y++)
             {
@@ -141,9 +144,11 @@ namespace Ageral
             }
 
             pontosAuxiliares.Add(pontosdaEstrada[pontosdaEstrada.Count - 1] );
-            if (saida)
-                pontosAuxiliares.Add(saida.pontosAuxiliares[indiceSaida]);
-
+            if (saida != null)
+            {
+                if (saida.ConecatacoComEste != null && RuaFechada == false)
+                    pontosAuxiliares.Add(saida.ConecatacoComEste.pontosAuxiliares[saida.INdiceDeleEmQueEstaConectadoEmMim]);
+            }
 
 
             }
@@ -421,9 +426,13 @@ namespace Ageral
         }
         public void adicionarEstradaEntrada(gerenciadorDeEstradas aux_) {
             // ache o ponto de entrada mais proximo do primei ponto de entrada da proxima estrada
-
-         
-           
+            entrada.INdiceDeleEmQueEstaConectadoEmMim = 0;
+            entrada.meuIndiceEmQueEstaCOnectado = 0;
+        if(entrada == null)
+            {
+                entrada = new conexao();
+            }
+            entrada.ConecatacoComEste = aux_;
             Vector3 primeiroPontoDeEntradaDaNovaEstrada = pontosAuxiliares[0];
          float menorDistancia = Vector3.Distance(primeiroPontoDeEntradaDaNovaEstrada, aux_.pontosAuxiliares[0]);
           for (int x= 0; x < aux_.pontosAuxiliares.Count; x++)
@@ -433,7 +442,7 @@ namespace Ageral
                 if (menorDistancia > aux)
                 {
                     menorDistancia = aux;
-                    indiceEntrada = x;
+                    entrada.INdiceDeleEmQueEstaConectadoEmMim = x;
                 }
             }
      
@@ -441,28 +450,29 @@ namespace Ageral
             //      ligar o primeiro da nova estrada se conectar com o mais proximo do atual
             List<Vector3> auxPontos = new List<Vector3>();
         
-            auxPontos.Add(aux_.pontosAuxiliares[indiceEntrada]);
+            auxPontos.Add(aux_.pontosAuxiliares[entrada.INdiceDeleEmQueEstaConectadoEmMim]);
             auxPontos.AddRange(pontosAuxiliares);
            pontosAuxiliares.Clear();
             pontosAuxiliares.AddRange(auxPontos);
-            // recalcular o auxgern
-            // remoldar o primeiro para que se conecte com o mais proximo
-
-           // auxGerenciadorEstradas.gerarEstrada();
            
-
-            pontosAuxiliares[0] = aux_.pontosAuxiliares[indiceEntrada];
             renderizarMesh();
             criarMalha();
-
-            entrada = aux_;
-            aux_.conecxoes.Add(this);
-            conecxoes.Add(aux_);
+          
+                aux_.conecxoes.Add(new conexao(this,entrada.INdiceDeleEmQueEstaConectadoEmMim,entrada.meuIndiceEmQueEstaCOnectado));
 
 
+            aux_.reorganizarcoenxes();
         }
         public void adicionarEstradaSaida(gerenciadorDeEstradas aux_)
         {
+           
+            if (saida == null)
+            {
+                saida = new conexao();
+            }
+            saida.ConecatacoComEste = aux_;
+            saida.INdiceDeleEmQueEstaConectadoEmMim = 0;
+            saida.meuIndiceEmQueEstaCOnectado = pontosAuxiliares.Count - 1;
 
             Vector3 primeiroPontoDeEntradaDaNovaEstrada = pontosAuxiliares[pontosAuxiliares.Count - 1];
             float menorDistancia = Vector3.Distance(primeiroPontoDeEntradaDaNovaEstrada, aux_.pontosAuxiliares[0]);
@@ -474,134 +484,58 @@ namespace Ageral
                 if (menorDistancia > aux)
                 {
                     menorDistancia = aux;
-                    indiceSaida = x;
+                    saida.INdiceDeleEmQueEstaConectadoEmMim = x;
                 }
             }
 
 
           
-           pontosAuxiliares.Add(aux_.pontosAuxiliares[indiceSaida]);
-    
-
-            pontosAuxiliares[pontosAuxiliares.Count - 1] = aux_.pontosAuxiliares[indiceSaida];
+      
+            pontosAuxiliares[pontosAuxiliares.Count - 1] = aux_.pontosAuxiliares[saida.INdiceDeleEmQueEstaConectadoEmMim];
             renderizarMesh();
             criarMalha();
-            saida = aux_;
-            aux_.conecxoes.Add(this);
-            conecxoes.Add(aux_);
 
-   
-
-
+           
+                aux_.conecxoes.Add(new conexao(this, saida.INdiceDeleEmQueEstaConectadoEmMim,saida.meuIndiceEmQueEstaCOnectado));
+           
+            
+            
+            reorganizarcoenxes();
+            aux_.reorganizarcoenxes();
         }
+        private void reorganizarcoenxes()
+        { }
         #endregion
         // criar sistema de estradas internas
-        #region sistema de Criar ruas internas
-        public List<gerenciadorDeEstradas> conecxoes = new List<gerenciadorDeEstradas>();
-        public gerenciadorDeEstradas entrada, saida;
-        int indiceEntrada, indiceSaida;
-   
-        public bool VerificarSeFechou()
-        {
-            bool aux = false;
-            if(entrada != null && saida != null)
-            {
-                if(entrada == saida)
-                {
-                    aux = true;
-                }
-                else
-                {
-                    List<gerenciadorDeEstradas> auxE = new List<gerenciadorDeEstradas>();
-                    auxE.Add(this);
-                    aux = (saida.aliteracaoVerificarPerimetro(entrada, auxE));
-                }
-            }
-            return aux;
-        }
-        
-        private bool aliteracaoVerificarPerimetro(gerenciadorDeEstradas alvo,List<gerenciadorDeEstradas> testados)
-        {
-            bool aux = false;
-
-            if(entrada == alvo || saida == alvo)
-            {
-                aux = true;
-            }
-            else
-            {
-                testados.Add(this);
-                if (saida != null)
-                {
-                    if (!testados.Contains(entrada))
-                    {
-                        aux = saida.aliteracaoVerificarPerimetro(alvo, testados);
-                    }
-                }
-                if (entrada != null)
-                {
-                    if (!aux)
-                    {
-
-                        aux = entrada.aliteracaoVerificarPerimetro(alvo, testados);
-                    }
-                }
-            }
-            if(aux == false)
-            {
-                foreach(gerenciadorDeEstradas aa in conecxoes)
-                {
-                    if (aliteracaoVerificarPerimetro(alvo,testados))
-                    {
-                        aux = true;
-                        break;
-                    }
-                }
-            }
-            return aux;
-        }
-
-        public void CriarArea()
-        {
-            // é praticamente a mesma coisa da verificação mas tenho que pegar os pontosauxiliares de A para B de cada rua até chegar pra fechar
-
-
-        }
-        #endregion 
+        public conexao entrada = new conexao(), saida = new conexao();
+        public List<conexao> conecxoes = new List<conexao>();
     }
-    public class areaQuadra {
-
-        [Tooltip("A porcentagem baseada no tamanho")]
-        [Range(0, 1)]
-        public float QuantidadeDeRuasPerimetro, QuantidadeDeConexoesInternas;
-        public List<Vector3> EntradasPerimetro = new List<Vector3>(), ConecxoesInternas = new List<Vector3>();
-
-
-
-
-        public void DefinirEntradasNoPerimetro()
+    [System.Serializable]
+    public class conexao
+    {
+        public conexao()
+        {  }
+        public conexao(gerenciadorDeEstradas a, int meu,int indiceDele)
         {
-
+            ConecatacoComEste = a;
+            meuIndiceEmQueEstaCOnectado = meu;
+            INdiceDeleEmQueEstaConectadoEmMim = indiceDele;
         }
-        public void DefinirConexoesInternas()
-        {
-
-        }
-
-        public void ConectarTudo()
-        {
-
-        }
-    }
+        public gerenciadorDeEstradas ConecatacoComEste;
+        public int meuIndiceEmQueEstaCOnectado, INdiceDeleEmQueEstaConectadoEmMim;  }
+ 
 
     [CustomEditor(typeof(gerenciadorDeEstradas))]
     public class EditorgerenciadorDeEstradas : Editor
     {
         public SerializedProperty pontosdaEstrada, auxGerenciadorEstradas,espessura, layerDaFloresta, escala,suavizacao,DiminuirEmRetas,AdicionarPoliACadaXDistancia,AnguloAgudo, QuantidadeDeAmostragemParaSuavizacaoAutomatica;
- 
+        public SerializedProperty entrada, saida, conecxoes;
         void OnEnable()
         {
-           
+            entrada = serializedObject.FindProperty("entrada");
+            saida = serializedObject.FindProperty("saida");
+            conecxoes = serializedObject.FindProperty("conecxoes");
+
             espessura = serializedObject.FindProperty("espessura");
             escala = serializedObject.FindProperty("escala");
 
@@ -669,14 +603,16 @@ namespace Ageral
 
                 meuScript.gerarEstrada();
             }
-
-           
-            if (GUILayout.Button("Gerar Malha"))
+            if (meuScript.pontosAuxiliares.Count > 0)
             {
-                
-                meuScript.renderizarMesh();
-                meuScript.criarMalha();
 
+                if (GUILayout.Button("Gerar Malha"))
+                {
+
+                    meuScript.renderizarMesh();
+                    meuScript.criarMalha();
+
+                }
             }
             EditorGUILayout.Space();
 
@@ -729,6 +665,38 @@ namespace Ageral
             EditorGUILayout.Space();
             GUILayout.Label("é uma rua fechada ?");
 
+            EditorGUILayout.PropertyField(auxGerenciadorEstradas, new GUIContent("Rua alvo"));
+          
+            
+            if (meuScript.auxGerenciadorEstradas)
+            {
+                // fazer depois pra retirar
+                if (GUILayout.Button(meuScript.entrada.ConecatacoComEste != null ? "Remover rua entrada " : "Adicionar rua entrada"))
+                {
+                    if (meuScript.entrada.ConecatacoComEste == null)
+                    {
+                        meuScript.adicionarEstradaEntrada(meuScript.auxGerenciadorEstradas);
+                    }
+                    else
+                    {
+                        meuScript.conecxoes.RemoveAll(x => x.ConecatacoComEste == meuScript.entrada.ConecatacoComEste);
+                        meuScript.entrada.ConecatacoComEste = null;
+                    }
+                }
+                if (GUILayout.Button(meuScript.saida.ConecatacoComEste == null? "adicionar rua saida" : " remover rua saida"))
+                {
+                    if (meuScript.saida.ConecatacoComEste == null)
+                    {
+                        meuScript.adicionarEstradaSaida(meuScript.auxGerenciadorEstradas);
+                    }else
+                        {
+
+                        meuScript.conecxoes.RemoveAll(x => x.ConecatacoComEste == meuScript.saida.ConecatacoComEste);
+                        meuScript.saida.ConecatacoComEste = null;
+
+                    }
+                }
+            }
           
 
                 if (GUILayout.Button(meuScript.RuaFechada ? "Abrir rua" : "Fechar rua"))
@@ -736,15 +704,14 @@ namespace Ageral
 
 
                     meuScript.RuaFechada = !meuScript.RuaFechada;
+                // fechar
                 if (meuScript.RuaFechada)
                 {
                     meuScript.pontosAuxiliares[meuScript.pontosAuxiliares.Count - 1] = meuScript.pontosAuxiliares[0];
+                    meuScript.entrada = new conexao(null,0,0);
+                    meuScript.saida = new conexao(null,0,0);  }
 
-                    meuScript.entrada = meuScript;
-                    meuScript.saida = meuScript;
-
-
-                }
+                // abrir
                 else
                 {
                     meuScript.pontosAuxiliares[meuScript.pontosAuxiliares.Count - 1] = meuScript.pontosdaEstrada[meuScript.pontosdaEstrada.Count - 1];
@@ -752,42 +719,11 @@ namespace Ageral
                     meuScript.renderizarMesh();
                     meuScript.criarMalha();
                 }
-          
 
-            EditorGUILayout.PropertyField(auxGerenciadorEstradas, new GUIContent("A estrada em questao : "));
-
-            if (meuScript.auxGerenciadorEstradas != null)
-            {
-                if (GUILayout.Button("adicionar entrada de bifurcacao"))
-                {
-                    meuScript.adicionarEstradaEntrada(meuScript.auxGerenciadorEstradas);
-                }
-                if (GUILayout.Button("Adicionar Saida de Bifurcacao"))
-                {
-                    meuScript.adicionarEstradaSaida(meuScript.auxGerenciadorEstradas);
-                }
-            }
-            EditorGUILayout.Space();
-           
-            if (meuScript.entrada != null && meuScript.saida != null)
-            {
-                if (GUILayout.Button("Criar novo bairro"))
-                {
-                    bool aux_ =(meuScript.VerificarSeFechou());
-                    if (aux_ == false)
-                    {
-                        Debug.Log("falhou em criar uma nova area");
-                    }
-                    else
-                    {
-                        meuScript.CriarArea();
-
-                    }
-                }
-            }
-            
-
-                serializedObject.ApplyModifiedProperties();
+            EditorGUILayout.PropertyField(entrada, new GUIContent("entrada  "));
+            EditorGUILayout.PropertyField(saida, new GUIContent("saida  "));
+            EditorGUILayout.PropertyField(conecxoes, new GUIContent("conecxoes  "));
+            serializedObject.ApplyModifiedProperties();
         }
 
         private void OnSceneGUI()
