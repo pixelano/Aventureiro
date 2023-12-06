@@ -424,6 +424,10 @@ namespace Ageral
             }
           
         }
+        public void removercone(gerenciadorDeEstradas aux_)
+        {
+            aux_.conecxoes.RemoveAll(x => x.ConecatacoComEste == this);
+        }
         public void adicionarEstradaEntrada(gerenciadorDeEstradas aux_) {
             // ache o ponto de entrada mais proximo do primei ponto de entrada da proxima estrada
             entrada.INdiceDeleEmQueEstaConectadoEmMim = 0;
@@ -507,7 +511,8 @@ namespace Ageral
         { }
         #endregion
         // criar sistema de estradas internas
-        public conexao entrada = new conexao(), saida = new conexao();
+        [SerializeField]
+        public conexao entrada ,saida ;
         public List<conexao> conecxoes = new List<conexao>();
     }
     [System.Serializable]
@@ -673,25 +678,30 @@ namespace Ageral
                 // fazer depois pra retirar
                 if (GUILayout.Button(meuScript.entrada.ConecatacoComEste != null ? "Remover rua entrada " : "Adicionar rua entrada"))
                 {
+                    if (meuScript.entrada == null)
+                        meuScript.entrada = new conexao();
                     if (meuScript.entrada.ConecatacoComEste == null)
                     {
                         meuScript.adicionarEstradaEntrada(meuScript.auxGerenciadorEstradas);
                     }
                     else
                     {
-                        meuScript.conecxoes.RemoveAll(x => x.ConecatacoComEste == meuScript.entrada.ConecatacoComEste);
+                        //    meuScript.conecxoes.RemoveAll(x => x.ConecatacoComEste == meuScript.entrada.ConecatacoComEste);
+                        meuScript.removercone(meuScript.auxGerenciadorEstradas);
                         meuScript.entrada.ConecatacoComEste = null;
                     }
                 }
                 if (GUILayout.Button(meuScript.saida.ConecatacoComEste == null? "adicionar rua saida" : " remover rua saida"))
                 {
+                    if (meuScript.saida == null)
+                        meuScript.saida = new conexao();
                     if (meuScript.saida.ConecatacoComEste == null)
                     {
                         meuScript.adicionarEstradaSaida(meuScript.auxGerenciadorEstradas);
                     }else
                         {
-
-                        meuScript.conecxoes.RemoveAll(x => x.ConecatacoComEste == meuScript.saida.ConecatacoComEste);
+                        meuScript.removercone(meuScript.auxGerenciadorEstradas);
+                        //   meuScript.conecxoes.RemoveAll(x => x.ConecatacoComEste == meuScript.saida.ConecatacoComEste);
                         meuScript.saida.ConecatacoComEste = null;
 
                     }

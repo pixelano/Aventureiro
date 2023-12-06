@@ -1,7 +1,9 @@
+using Codice.Client.Commands;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Ageral
 {
@@ -9,9 +11,9 @@ namespace Ageral
     {
         
         public List<gerenciadorDeEstradas> Ruas = new List<gerenciadorDeEstradas>();
-        public List<Vector3> pontosAxiliares = new List<Vector3>();
+        public List<Vector3> PontosEmVolta, todosPontosEmVolta,pontosInternos;
         gerenciadorDeEstradas RuaAlvo;
-        public bool GuizmosAoRedor,GuizmosInterno;
+        public bool GuizmosAoRedor,GuizmosInterno,guizmosLinhasCaminho;
         public void verificarSeEstaFechado()
         {    // crie uma lista temporaria com os mesmos valores de ruas
             // escolha uma rua
@@ -306,6 +308,7 @@ namespace Ageral
 
         }
       */
+
         public class unidadeAlit
         {
             public gerenciadorDeEstradas zero,intercessaoA,intercessaoB;
@@ -343,14 +346,420 @@ namespace Ageral
         [SerializeField]
         public List<unidadeAlit> aaaaaaaaa  ;
 
+        public int quantidadeEmVolta;
         public void calcularAoReddor()
         {
-           
-         foreach(var a in aaaaaaaaa)
+            todosPontosEmVolta = new List<Vector3>();
+         
+            foreach(var a in aaaaaaaaa)
             {
-                Debug.Log(a.zero.name + "  A " + a.indiceIntercessaoA + "   B  " + a.indiceIntercessaoB );
+              for(int x = a.indiceIntercessaoA; x != a.indiceIntercessaoB; x  = a.indiceIntercessaoA < a.indiceIntercessaoB ?
+                    x+1:x-1)
+                {
+                    todosPontosEmVolta.Add(a.zero.pontosAuxiliares[x]);
+                }
+            }
+            PontosEmVolta = new List<Vector3>();
+            for(int x =0; x < quantidadeEmVolta; x++)
+            {
+                Vector3 tempv = todosPontosEmVolta[Random.Range(0, todosPontosEmVolta.Count - 1)];
+                PontosEmVolta.Add(tempv);
+                todosPontosEmVolta.Remove(tempv);
+            }
+            pontosExternos.Clear();
+            foreach(var a in PontosEmVolta)
+            {
+                pontosExternos.Add(new pontos_(a));
             }
             
+
+        }
+
+        public int quantidadeDePontos;
+        public float distanciaDeCorte;
+        public void adicionarPontosInternos()
+        {
+
+            //criar os pontos
+            Vector3 meio = Vector3.zero;
+
+            foreach(var a in todosPontosEmVolta)
+            {
+                meio += a;
+            }
+            meio /= todosPontosEmVolta.Count;
+            pontosInternos.Clear();
+            while (pontosInternos.Count < quantidadeDePontos) {
+                int pontoI = Random.Range(0, todosPontosEmVolta.Count);
+                float forca = Random.Range(0.1f, 0.75f);
+
+                pontosInternos.Add(Vector3.Lerp(todosPontosEmVolta[pontoI], meio, forca));
+            }
+
+            List<Vector3> tempL = new List<Vector3>();
+            foreach(var a in pontosInternos)
+            {
+                foreach(var b in pontosInternos)
+                {
+                    if (a == b)
+                        continue;
+                    float dist = Vector3.Distance(a, b);
+
+                    if(dist < distanciaDeCorte)
+                    {
+                        tempL.Add(a);
+                        break;
+                    }
+                }
+            }
+            pontosINternos.Clear();
+          
+            Debug.Log("vai remover : " +  tempL.Count + "   de  " + pontosInternos.Count);
+            pontosInternos.RemoveAll(x=> tempL.Contains(x));
+            Debug.Log("sobraram  " + pontosInternos.Count);
+
+            foreach (var a in pontosInternos)
+            {
+                pontosINternos.Add(new pontos_(a));
+            }
+
+            /*
+            int auxint = 0;
+            pontosInternos = new List<Vector3>();
+           for (int j = 0; j < quantidadeDePontos;j++)
+            {
+                int indc = Random.Range(0, todosPontosEmVolta.Count);
+                Vector3 pontoA = todosPontosEmVolta[indc];
+                Vector3 pontoB = todosPontosEmVolta[Random.Range(0, todosPontosEmVolta.Count)];
+
+                Vector3 pontoF = Vector3.Lerp(pontoA, pontoB, 0.5f);
+
+                bool aux = true;
+                float dentro=0, fora=0;
+                for(int x = 0; x < todosPontosEmVolta.Count-1; x++)
+                {
+                    if (ValoresUniversais.Orientacao3(todosPontosEmVolta[x], todosPontosEmVolta[x + 1], pontoF) == 2)
+                    {
+                        dentro += 1;
+
+                    }
+                    else
+                    {
+                        fora++;
+                    }
+                }
+                Debug.Log("dentro   " +dentro + "   fora  " + fora);
+                if (dentro > fora)
+                {
+                    pontosInternos.Add(pontoF);
+                }
+                //  pontoF /= 2;
+               
+                                float dist = Vector3.Distance(pontoA, pontoA);
+
+                              for(int x =0; x < todosPontosEmVolta.Count; x++)
+                                {
+                                    float aaa = Vector3.Distance(pontoF, todosPontosEmVolta[x]);
+                                    if (aaa < dist)
+                                    {
+                                        indc = x;
+                                        dist = aaa;
+                                    }
+                                }
+
+                                float ori = ValoresUniversais.Orientacao3(todosPontosEmVolta[indc], todosPontosEmVolta[indc + 1 > todosPontosEmVolta.Count ? 0 : indc + 1],pontoF);
+
+                                if(ori == 2)
+                                {
+                                    pontosInternos.Add(pontoF);
+                                }*/
+
+
+        }
+
+        [System.Serializable]
+        public class pontos_
+        {
+            public Vector3 origem;
+            public List<Vector3> linhas = new List<Vector3>();
+        public pontos_(Vector3 a)
+            {
+                origem = a;
+            }
+        
+        }
+
+       
+        public List<pontos_> pontosINternos = new List<pontos_>(), pontosExternos = new List<pontos_>();
+        public float rangeDistPulo;
+        public void criarCaminhos()
+        {
+
+
+            foreach (var a in pontosINternos)
+            { a.linhas.Clear(); }
+
+            // adiciona as linhas internas
+            foreach (var a in pontosINternos)
+            {
+                foreach (var b in pontosINternos)
+                {
+                    if (a == b)
+                        continue;
+
+                    // vai de A para B
+                    pontos_ pontoAtual_ = a;
+                    pontos_ proximoPonto = a;
+                    float euriBase = Mathf.Infinity;
+                    int contador = 0;
+                    while (proximoPonto != b)
+                    {
+                        if (contador > 100)
+                            break;
+                        List<pontos_> tempListProximo = new List<pontos_>();
+                        foreach (var c in pontosINternos)
+                        {
+                            if (c == pontoAtual_)
+                                continue;
+
+                            float euristica = Vector3.Distance(pontoAtual_.origem, c.origem);
+                            if (euristica < euriBase)
+                            {
+                                euriBase = euristica;
+                                tempListProximo.Add(c);
+                            }
+                        }
+                        if (tempListProximo.Count > 0)
+                        {
+                            float tempdist = Mathf.Infinity;
+                            foreach (var c in tempListProximo)
+                            {
+                                float eurist = Vector3.Distance(c.origem, b.origem);
+
+                                if (eurist < tempdist)
+                                {
+                                    tempdist = eurist;
+                                    proximoPonto = c;
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            Debug.Log("erro 587");
+                            break;
+                        }
+                        pontoAtual_.linhas.Add(proximoPonto.origem);
+                        pontoAtual_ = proximoPonto;
+
+                    }
+
+                }
+            }
+
+            // remove as linhas cruzadas
+            for (int x = 0; x < pontosINternos.Count; x++)
+            {
+                pontos_ A = pontosINternos[x];
+                for (int y = 0; y < pontosINternos.Count; y++)
+                {
+                    pontos_ B = pontosINternos[y];
+
+                    if (A == B) { continue; }
+
+                    for (int x_ = 0; x_ < A.linhas.Count; x_++)
+                    {
+                        for (int y_ = 0; y_ < B.linhas.Count; y_++)
+                        {
+                            Vector3 A_ = A.linhas[x_];
+                            Vector3 B_ = B.linhas[y_];
+
+                            if (A_ == B_ || A_ == B.origem || B_ == A.origem)
+                                continue;
+
+                            if (ValoresUniversais.LinhasCruzadas(A.origem, A_, B.origem, B_))
+                            {
+                                y_ = 0;
+
+                                B.linhas.Remove(B_);
+
+                            }
+                        }
+                    }
+                }
+            }
+
+
+          
+            
+            // adiciona as entradas de dentro pra fora    
+            List<pontos_> tempPE = new List<pontos_>();
+            int indcz = pontosINternos.Count - 1;
+       for(int x = 0; x < pontosExternos.Count; x++)
+            {
+
+                pontos_ tempP = new pontos_(pontosExternos[x].origem);
+                float PI = Mathf.Infinity;
+                Vector3 tempV = Vector3.zero;
+                foreach(var a in pontosInternos)
+                {
+                    float tempDist = Vector3.Distance(tempP.origem,a);
+                    if ( tempDist< PI)
+                    {
+                        tempV = a;
+                        PI = tempDist;
+                    }
+                }
+
+                tempP.linhas.Add(tempV);
+
+             
+                    tempPE.Add(tempP);
+            }
+            // remove as linhas cruzadas
+
+            for (int x = 0; x < tempPE.Count; x++)
+            {
+                for (int z = 0; z < tempPE[x].linhas.Count; z++)
+                {
+                    for (int a = 0; a < pontosINternos.Count; a++)
+                    {
+                        for (int b = 0; b < pontosINternos[a].linhas.Count; b++)
+                        {
+
+                            if (tempPE[x].linhas[z] == pontosINternos[a].origem ||
+                                tempPE[x].linhas[z] == pontosINternos[a].linhas[b])
+                                continue;
+
+                            if (ValoresUniversais.LinhasCruzadas(
+                                tempPE[x].origem, tempPE[x].linhas[z], pontosINternos[a].origem,
+                                pontosINternos[a].linhas[b]
+                                ))
+                            {
+                                pontosINternos[a].linhas.RemoveAt(b);
+                                b = 0;
+                            }
+                        }
+                    }
+                }
+            }
+            for(int x = 0; x < aaaaaaaaa.Count; x++)
+            {
+                for(int z = 0; z < aaaaaaaaa[x].zero.pontosAuxiliares.Count-1; z++)
+                {
+                    foreach(var a in tempPE)
+                    {
+                        for(int c = 0; c < a.linhas.Count; c++)
+                        {
+                            if (ValoresUniversais.LinhasCruzadas(aaaaaaaaa[x].zero.pontosAuxiliares[z],
+                                aaaaaaaaa[x].zero.pontosAuxiliares[z+1],
+                                a.origem, a.linhas[c]))
+                            {
+                                a.linhas.RemoveAt (c);
+                                c = 0;
+                            }   
+                        }
+                    }
+
+                }
+            }
+
+            
+           pontosINternos.AddRange(tempPE);
+
+
+
+
+        }
+
+
+
+        public class removerCruz {
+           public Vector3 A, A_, B, B_;
+            public removerCruz(Vector3 a, Vector3 a_, Vector3 b, Vector3 b_)
+            {
+                A = a;
+                A_ = a_;
+                B = b;
+                B_ = b_;
+            }
+        }
+        public Mesh mesh;
+        public bool gerarMalha;
+        public void criarMalha()
+        {
+            ordemTrianguo.Clear();
+            foreach(var a in pontosINternos)
+            {
+                foreach( var b in a.linhas)
+                {
+                    Vector3 orientacao = Vector3.Cross(b - a.origem, Vector3.up).normalized;
+
+                    Vector3 AE = a.origem + orientacao - transform.position;
+                    Vector3 AD = a.origem - orientacao - transform.position;
+
+                    Vector3 BE = b + orientacao - transform.position;
+                    Vector3 BD = b - orientacao- transform.position;
+
+                    ordemTrianguo.Add(AE);
+                    ordemTrianguo.Add(BE);
+                    ordemTrianguo.Add(AD);
+
+                    ordemTrianguo.Add(BE);
+                    ordemTrianguo.Add(BD);
+                    ordemTrianguo.Add(AD);
+
+
+                }
+            }
+            gerarmalha();
+        }
+        public MeshFilter meshFilter;
+        public MeshRenderer meshRenderer;
+        public List<Vector3> ordemTrianguo = new List<Vector3>();
+        public void gerarmalha()
+        {
+            mesh = new Mesh();
+
+            // Atribuir os vértices à malha
+            mesh.vertices = ordemTrianguo.ToArray();
+
+            // Definir os triângulos (assumindo que os vértices estão em grupos de três para formar triângulos)
+            int[] triangles = new int[ordemTrianguo.Count];
+            for (int i = 0; i < triangles.Length; i++)
+            {
+                triangles[i] = i;
+            }
+
+            // Atribuir os triângulos à malha
+            mesh.triangles = triangles;
+
+            // Recalcular normais e bounds (opcional, mas geralmente desejável)
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+
+            // Atribuir a malha ao componente MeshFilter do GameObject
+            if (meshFilter == null)
+            {
+                meshFilter = GetComponent<MeshFilter>();
+                if (meshFilter == null)
+                {
+                    meshFilter = gameObject.AddComponent<MeshFilter>();
+                }
+            }
+            meshFilter.mesh = mesh;
+
+            // Atribuir um material (pode ajustar conforme necessário)
+            if (gerarMalha)
+            {
+                 meshRenderer = GetComponent<MeshRenderer>();
+                if (meshRenderer == null)
+                {
+                    meshRenderer = gameObject.AddComponent<MeshRenderer>();
+                }
+                meshRenderer.material = new Material(Shader.Find("Standard"));
+            }
+
 
         }
 
@@ -380,25 +789,72 @@ namespace Ageral
 
                 meuScript.calcularAoReddor();
             }
+            if (GUILayout.Button("Criar pontos internos"))
+            {
+                meuScript. adicionarPontosInternos();
+                    }
+
+            if (GUILayout.Button("Criar caminhos"))
+            {
+                meuScript.criarCaminhos();
+            }
+            if (GUILayout.Button( " renderizar malha"))
+            {
+               
+                    meuScript.criarMalha();
+                
+               
+            }
+
+
                 serializedObject.ApplyModifiedProperties();
         }
         private void OnSceneGUI()
         {
             GerenciadorDeArea meuScript = (GerenciadorDeArea)target;
             if (meuScript.GuizmosAoRedor) { 
-            if (meuScript.aaaaaaaaa.Count > 0)
+            if (meuScript.PontosEmVolta != null)
             {
-                    foreach (var a in meuScript.aaaaaaaaa)
+                    foreach (var a in meuScript.PontosEmVolta)
                     {
-                        for (int x = a.indiceIntercessaoA; x < a.indiceIntercessaoB; x++)
-                        {
+                       
                             Handles.color = Color.red;
-                            Handles.DrawSolidDisc(a.zero.pontosAuxiliares[x], Vector3.up, 10);
-                        }
+                            Handles.DrawSolidDisc(a, Vector3.up, 10);
+                        
                     }
                 }
             }
-       
+            if (meuScript.GuizmosInterno)
+            {
+                if(meuScript.pontosInternos.Count > 0)
+                {
+                    foreach (var a in meuScript.pontosInternos)
+                    {
+
+                        Handles.color = Color.blue;
+                        Handles.DrawSolidDisc(a, Vector3.up, 10);
+
+                    }
+                }
+            }
+
+            if (meuScript.guizmosLinhasCaminho)
+            {
+                if (meuScript.pontosINternos.Count > 0)
+                {
+                    foreach(var a in meuScript.pontosINternos)
+                    {
+                        foreach(var b in a.linhas)
+                        {
+                            Handles.color = Color.red;
+                            Handles.DrawLine(a.origem, b,5);
+                        }
+                    }
+                }
+                {
+
+                }
+            }
             }
 
         }

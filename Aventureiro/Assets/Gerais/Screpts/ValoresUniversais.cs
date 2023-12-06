@@ -64,7 +64,20 @@ namespace Ageral
             // Se o produto cruzado for quase zero, os pontos est�o em linha reta.
             return MathF.Abs( crossProduct ) < tolerancia;
         }
+        public static bool LinhasCruzadas(Vector3 a , Vector3 b , Vector3 c , Vector3 d)
+        {
+            
+            float ABC = Orientacao3(a,b,c);
+            float ABD = Orientacao3(a, b, d);
+            float CDA = Orientacao3(c, d, a);
+            float CDB = Orientacao3(c, d, b);
 
+            bool A_ = ABC != ABD;
+            bool B_ = CDA != CDB;
+
+
+            return A_ && B_;
+        }
         public static float Orientacao(Vector2 p, Vector2 q, Vector2 r)
         {
             float val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);

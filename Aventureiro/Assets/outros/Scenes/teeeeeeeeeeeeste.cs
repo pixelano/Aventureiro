@@ -96,9 +96,20 @@ public class teeeeeeeeeeeeste : MonoBehaviour
 
 
     }
+    public void calculoporTriangulo()
+    {
+
+      
+      for(int zz = 0; zz < triangulos.Count; zz++) {
+            {
+                float y = Mathf.PerlinNoise(((triangulos[zz].x + baiasX) * amplitude) / frequencia, ((triangulos[zz].z + baiasY) * amplitude) / frequencia);
+                triangulos[zz]= new Vector3(triangulos[zz].x, y, triangulos[zz].z);
+            }
+        }
+    }
 
     public bool gerarmapa_, movimentar_, triangular_, criarmalha_, updatar,movimentarHorizontal,movimentarVertical;
-    public float timer;
+    public float tempoAtt,TempoMalha;
     public void Update()
     {
         if (gerarmapa_)
@@ -123,21 +134,22 @@ public class teeeeeeeeeeeeste : MonoBehaviour
         }
         if (updatar)
         {
-           if(tt_ > timer)
+           if(tt_ > tempoAtt)
             {
                 if (movimentarHorizontal)
                 {
-                    baiasX+= timer;
+                    baiasX+= TempoMalha;
                 }
                 if (movimentarVertical)
                 {
-                    baiasY+= timer;
+                    baiasY+= TempoMalha;
                 }
 
                 tt_ = 0;
-                gerarMapa();
-                movimentar();
-                triangular();
+                // gerarMapa();
+                //  movimentar();
+                // triangular();
+                calculoporTriangulo();
                 criarMalha();
             }
             tt_ += Time.deltaTime;

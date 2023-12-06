@@ -170,7 +170,8 @@ MonoBehaviour:
   updatar: 0
   movimentarHorizontal: 0
   movimentarVertical: 0
-  timer: 1
+  tempoAtt: 0.1
+  TempoMalha: 0.1
 --- !u!4 &1758298004
 Transform:
   m_ObjectHideFlags: 0
