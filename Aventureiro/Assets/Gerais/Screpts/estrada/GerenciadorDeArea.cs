@@ -15,15 +15,7 @@ namespace Ageral
         gerenciadorDeEstradas RuaAlvo;
         public bool GuizmosAoRedor,GuizmosInterno,guizmosLinhasCaminho;
         public void verificarSeEstaFechado()
-        {    // crie uma lista temporaria com os mesmos valores de ruas
-            // escolha uma rua
-            // veja quais ruas estão conectada com esta rua
-            // escolha uma, uma sera o alvo e a outra sera o incio
-
-            // remova a rua escolida da lista temporaria
-            // a rua de ponto de inicio deve receber a lista temporaria e a rua alvo,
-            // quando ela receber este valor deve fazer as mesmas perguntas até achar a rua alvo
-
+        {    
             RuaAlvo = Ruas[0].entrada.ConecatacoComEste;
 
             if (Ruas[0].saida.ConecatacoComEste == RuaAlvo)
@@ -109,206 +101,6 @@ namespace Ageral
 
             return null;
         }
-        /*
-        public void verificarSeEstaFechado()
-        {
-        
-
-            
-
-            gerenciadorDeEstradas  Ruainicio = null,ruaZero;
-            RuaAlvo = null;
-            ruaZero = Ruas[0];
-            //rua alvo
-
-            int indiceInicial = -1, indiceFinal = -1;
-            foreach (var item in Ruas)
-            {
-                if (item == ruaZero.entrada.ConecatacoComEste)
-                {
-                    RuaAlvo = ruaZero.entrada.ConecatacoComEste;
-                    indiceInicial = 0;
-                    break;
-                }
-                if (item == ruaZero.saida.ConecatacoComEste)
-                {
-                    RuaAlvo = ruaZero.entrada.ConecatacoComEste;
-                    indiceInicial = ruaZero.pontosAuxiliares.Count - 1;
-                    break;
-                }
-
-                if (ruaZero.conecxoes.Exists(x => x.ConecatacoComEste == item))
-                {
-                    RuaAlvo = item;
-                    indiceInicial = ruaZero.conecxoes.Find(x => x.ConecatacoComEste == RuaAlvo).indiceDeleEmQueEstouConectado;
-                    break;
-                }
-            }
-          
-            foreach (var item in Ruas)
-            {
-                if (item == RuaAlvo)
-                    continue;
-                if (item == ruaZero.entrada.ConecatacoComEste)
-                {
-                    Ruainicio = ruaZero.entrada.ConecatacoComEste;
-                    indiceFinal = 0;
-                    break;
-                }
-                if (item == ruaZero.saida.ConecatacoComEste)
-                {
-                    Ruainicio = ruaZero.entrada.ConecatacoComEste;
-                    indiceFinal = ruaZero.pontosAuxiliares.Count - 1;
-                    break;
-                }
-
-                if (ruaZero.conecxoes.Exists(x => x.ConecatacoComEste == item))
-                {
-                    Ruainicio = item;
-                    indiceFinal = ruaZero.conecxoes.Find(x => x.ConecatacoComEste == RuaAlvo).indiceDeleEmQueEstouConectado;
-                    break;
-                }
-            }
-
-            Debug.Log(ruaZero.entrada.ConecatacoComEste);
-
-            if (Ruainicio == null || RuaAlvo == null)
-            {
-             
-            }
-            else
-            {
-
-
-
-                List<gerenciadorDeEstradas> blackList = new List<gerenciadorDeEstradas>();
-                blackList.Add(ruaZero);
-                //    List<unidadeAlit> resultado = aliterarRuas(RuaAlvo, Ruas[1], new unidadeAlit(Ruas[1], ruaZero,0, Ruas[2], 0),blackList,0);
-                // new unidadeAlit(ruaZero, RuaAlvo, 0, Ruas[1], 0)
-                aaaaaaaaa = aliterarRuas(RuaAlvo, ruaZero, null, blackList, 0);
-
-                aaaaaaaaa[aaaaaaaaa.Count - 1].intercessaoA = aaaaaaaaa[0].zero;
-                aaaaaaaaa[aaaaaaaaa.Count - 1].indiceIntercessaoA = aaaaaaaaa[aaaaaaaaa.Count - 1].
-                    zero.conecxoes.Find(x => x.ConecatacoComEste == RuaAlvo).indiceDeleEmQueEstouConectado;
-             /*
-                Debug.Log("procurando  " +ruaal.name);
-                foreach(var a in RuaAlvo.conecxoes)
-                {
-                    Debug.Log(a.ConecatacoComEste.name);
-                }
-          
-                //   gerenciadorDeEstradas entradaA = RuaAlvo.conecxoes.Find(x => x.ConecatacoComEste == aaaaaaaaa[aaaaaaaaa.Count - 2].zero).ConecatacoComEste;
-              //  gerenciadorDeEstradas entradaB = RuaAlvo.conecxoes.Find(x => x.ConecatacoComEste == aaaaaaaaa[aaaaaaaaa.Count - 1].zero).ConecatacoComEste;
-             
-                 unidadeAlit bb = new unidadeAlit(RuaAlvo, aaaaaaaaa[aaaaaaaaa.Count - 1].zero,
-                    RuaAlvo.conecxoes.Find(x=>x.ConecatacoComEste == aaaaaaaaa[aaaaaaaaa.Count - 1].zero).indiceDeleEmQueEstouConectado, 
-                    aaaaaaaaa[0].zero, RuaAlvo.conecxoes.Find(x => x.ConecatacoComEste == aaaaaaaaa[0].zero).indiceDeleEmQueEstouConectado);
-                aaaaaaaaa.Add(bb);
-            
-            }
-           
-
-        }  
-        public List<unidadeAlit> aliterarRuas(gerenciadorDeEstradas alvo, gerenciadorDeEstradas  atual, unidadeAlit anterior , List<gerenciadorDeEstradas> blackList,int cont)
-        {
-            Debug.Log("testeeeee");
-            blackList.Add(atual);
-
-            // verificar se voce esta conectado nele
-            if(atual.entrada.ConecatacoComEste == alvo && blackList.Exists(x=>x == atual.entrada.ConecatacoComEste))
-            {
-                unidadeAlit temp = new unidadeAlit(atual,anterior.zero,0
-                    ,atual.entrada.ConecatacoComEste,atual.pontosAuxiliares.Count-1);
-
-                List<unidadeAlit> primeiro = new List<unidadeAlit>();
-                primeiro.Add(temp);
-                Debug.Log("inicio");
-                return primeiro;
-            }
-            if (atual.saida.ConecatacoComEste == alvo && blackList.Exists(x => x == atual.saida.ConecatacoComEste))
-            {
-                unidadeAlit temp = new unidadeAlit(atual, anterior.zero, atual.pontosAuxiliares.Count - 1
-                    , atual.saida.ConecatacoComEste,0);
-
-                List<unidadeAlit> primeiro = new List<unidadeAlit>();
-                primeiro.Add(temp);
-                Debug.Log("final");
-                Debug.Log(cont);
-                return primeiro;
-            }
-
-            // caso não esteja conectado verificar se ele que esta conectado em voce
-            Debug.Log(atual.conecxoes);
-            if(anterior != null) {
-                foreach (var a in atual.conecxoes)
-                {
-                    if (blackList.Exists(x => x == a.ConecatacoComEste))
-                        continue;
-
-                    if (a.ConecatacoComEste == alvo)
-                    {
-
-                        int anteri = 0, proximo = 0;
-                        if(anterior.zero == atual.entrada.ConecatacoComEste)
-                        {
-                            anteri = 0;
-                        }
-                        else if (anterior.zero == atual.saida.ConecatacoComEste)
-                        {
-                            anteri = atual.pontosAuxiliares.Count - 1;
-                        }
-                        else
-                        {
-                            anteri = -1;
-                        }
-
-                        if (a.ConecatacoComEste == atual.entrada.ConecatacoComEste)
-                        {
-                            proximo = 0;
-                        }
-                        else if (a.ConecatacoComEste == atual.saida.ConecatacoComEste)
-                        {
-                            proximo = atual.pontosAuxiliares.Count - 1;
-                        }
-                        else
-                        {
-                            proximo = -1;
-                        }
-
-
-                        unidadeAlit temp = new unidadeAlit(atual, anterior.zero,anteri == -1 ? anterior.indiceIntercessaoB:anteri
-                       , a.ConecatacoComEste, proximo == -1 ? a.INdiceDeleEmQueEstaConectadoEmMim:proximo);
-
-                        List<unidadeAlit> primeiro = new List<unidadeAlit>();
-                        primeiro.Add(temp);
-
-                        return primeiro;
-                    }
-                }
-            }
-            // caso não tenha conexao direita verificar se alguem que voce esta conectado tem conexao com ele
-
-            foreach(var a in atual.conecxoes)
-            {
-                if (blackList.Exists(x => x == a.ConecatacoComEste))
-                    continue;
-                unidadeAlit temporario = new unidadeAlit(atual,anterior == null ? null: anterior.zero, anterior == null ? 0:anterior.indiceIntercessaoB,                    a.ConecatacoComEste, a.INdiceDeleEmQueEstaConectadoEmMim);
-                List<unidadeAlit> listTemp = new List<unidadeAlit>();
-             
-                Debug.Log(cont);
-                listTemp.AddRange(aliterarRuas(alvo, a.ConecatacoComEste, temporario, blackList,cont++));
-                if(listTemp.Count > 0)
-                {
-                    listTemp.Add(temporario);
-                    return listTemp;
-                }
-            }
-            Debug.Log("teste");
-            return null;
-
-        }
-      */
-
         public class unidadeAlit
         {
             public gerenciadorDeEstradas zero,intercessaoA,intercessaoB;
@@ -422,58 +214,8 @@ namespace Ageral
             {
                 pontosINternos.Add(new pontos_(a));
             }
-
-            /*
-            int auxint = 0;
-            pontosInternos = new List<Vector3>();
-           for (int j = 0; j < quantidadeDePontos;j++)
-            {
-                int indc = Random.Range(0, todosPontosEmVolta.Count);
-                Vector3 pontoA = todosPontosEmVolta[indc];
-                Vector3 pontoB = todosPontosEmVolta[Random.Range(0, todosPontosEmVolta.Count)];
-
-                Vector3 pontoF = Vector3.Lerp(pontoA, pontoB, 0.5f);
-
-                bool aux = true;
-                float dentro=0, fora=0;
-                for(int x = 0; x < todosPontosEmVolta.Count-1; x++)
-                {
-                    if (ValoresUniversais.Orientacao3(todosPontosEmVolta[x], todosPontosEmVolta[x + 1], pontoF) == 2)
-                    {
-                        dentro += 1;
-
-                    }
-                    else
-                    {
-                        fora++;
-                    }
-                }
-                Debug.Log("dentro   " +dentro + "   fora  " + fora);
-                if (dentro > fora)
-                {
-                    pontosInternos.Add(pontoF);
-                }
-                //  pontoF /= 2;
-               
-                                float dist = Vector3.Distance(pontoA, pontoA);
-
-                              for(int x =0; x < todosPontosEmVolta.Count; x++)
-                                {
-                                    float aaa = Vector3.Distance(pontoF, todosPontosEmVolta[x]);
-                                    if (aaa < dist)
-                                    {
-                                        indc = x;
-                                        dist = aaa;
-                                    }
-                                }
-
-                                float ori = ValoresUniversais.Orientacao3(todosPontosEmVolta[indc], todosPontosEmVolta[indc + 1 > todosPontosEmVolta.Count ? 0 : indc + 1],pontoF);
-
-                                if(ori == 2)
-                                {
-                                    pontosInternos.Add(pontoF);
-                                }*/
-
+            pontosinternosBKP.Clear();
+            pontosinternosBKP.AddRange( pontosINternos);
 
         }
 
@@ -489,12 +231,13 @@ namespace Ageral
         
         }
 
-       
-        public List<pontos_> pontosINternos = new List<pontos_>(), pontosExternos = new List<pontos_>();
+        public List<pontos_> pontosINternos = new List<pontos_>(), pontosExternos = new List<pontos_>(), pontosinternosBKP = new List<pontos_>();
         public float rangeDistPulo;
         public void criarCaminhos()
         {
-
+            ordemTrianguo.Clear();
+            pontosINternos.Clear();
+            pontosINternos.AddRange(pontosinternosBKP);
 
             foreach (var a in pontosINternos)
             { a.linhas.Clear(); }
@@ -595,16 +338,16 @@ namespace Ageral
             // adiciona as entradas de dentro pra fora    
             List<pontos_> tempPE = new List<pontos_>();
             int indcz = pontosINternos.Count - 1;
-       for(int x = 0; x < pontosExternos.Count; x++)
+            for (int x = 0; x < pontosExternos.Count; x++)
             {
 
                 pontos_ tempP = new pontos_(pontosExternos[x].origem);
                 float PI = Mathf.Infinity;
                 Vector3 tempV = Vector3.zero;
-                foreach(var a in pontosInternos)
+                foreach (var a in pontosInternos)
                 {
-                    float tempDist = Vector3.Distance(tempP.origem,a);
-                    if ( tempDist< PI)
+                    float tempDist = Vector3.Distance(tempP.origem, a);
+                    if (tempDist < PI)
                     {
                         tempV = a;
                         PI = tempDist;
@@ -613,8 +356,8 @@ namespace Ageral
 
                 tempP.linhas.Add(tempV);
 
-             
-                    tempPE.Add(tempP);
+
+                tempPE.Add(tempP);
             }
             // remove as linhas cruzadas
 
@@ -636,44 +379,49 @@ namespace Ageral
                                 pontosINternos[a].linhas[b]
                                 ))
                             {
-                                pontosINternos[a].linhas.RemoveAt(b);
-                                b = 0;
+                               pontosINternos[a].linhas.RemoveAt(b);
+                              b = 0;
                             }
                         }
                     }
                 }
             }
-            for(int x = 0; x < aaaaaaaaa.Count; x++)
-            {
-                for(int z = 0; z < aaaaaaaaa[x].zero.pontosAuxiliares.Count-1; z++)
-                {
-                    foreach(var a in tempPE)
-                    {
-                        for(int c = 0; c < a.linhas.Count; c++)
-                        {
-                            if (ValoresUniversais.LinhasCruzadas(aaaaaaaaa[x].zero.pontosAuxiliares[z],
-                                aaaaaaaaa[x].zero.pontosAuxiliares[z+1],
-                                a.origem, a.linhas[c]))
-                            {
-                                a.linhas.RemoveAt (c);
-                                c = 0;
-                            }   
-                        }
-                    }
 
+            // remover linhas que cruzam fora
+            if (flagmudar)
+            {
+                for (int x = 0; x < tempPE.Count; x++)
+                {
+                    for (int z = 0; z < tempPE[x].linhas.Count; z++)
+                    {
+
+                        for (int i = 0; i < todosPontosEmVolta.Count - 1; i++)
+                        {
+                            Vector3 a = todosPontosEmVolta[i];
+                            Vector3 b = todosPontosEmVolta[i + 1];
+
+                            if (Vector3.Distance(a, b) < distancia_removerAoRedor)
+                            {
+                                if (ValoresUniversais.LinhasCruzadas(tempPE[x].origem, tempPE[x].linhas[z], a, b))
+                                {
+                                    tempPE[x].linhas.RemoveAt(z);
+                                    z = 0;
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
                 }
             }
-
-            
-           pontosINternos.AddRange(tempPE);
-
-
-
+                    pontosINternos.AddRange(tempPE);
 
         }
 
 
-
+        public bool flagmudar;
+        public float distancia_removerAoRedor;
+             
         public class removerCruz {
            public Vector3 A, A_, B, B_;
             public removerCruz(Vector3 a, Vector3 a_, Vector3 b, Vector3 b_)

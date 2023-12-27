@@ -1,0 +1,57 @@
+
+
+
+ visão geral    {
+
+Objetivos:
+Resolver quests da guilda de aventureiros e mudar o destino das pessoas e dos reinos.
+
+Mecanica principal:
+
+Os itens que o jogador carrega são muit limitador e são restritos para o que uma pessoa consegue carregar, o gerenciamento de inventario/recursos
+é um  foco importante para o jogo, usar mochilas, carrinhos de mão, carruagem ... são algo importante para se ter, logo é necessario
+ter companheiros de equipe com funções porgramaveis.
+Completar quests impacta no destino das pessoas, salvar ou deichar de salvar alguem tem impacto direto com jogador, como salvar alguem 
+importante para uma cidade e que tenha um Karma positivo vai tornar o local mais agradavel, mas se salvar alguem com karma caotico vai
+destruir o local.
+
+Controles:
+movimento - WASD
+1~4- altera entre os equipamentos
+Q- ativa o uso de magia, a magia selecionaveis vão de 1~4
+E- inventario
+F- interagir
+RC- botão de ação, serve para atacar, ou executar ação
+LC- botão auxiliar, serve para ações secundarias como defender, voltar no menu, ou abrir para mais opções
+
+Progressão:
+
+Niveis de magia, fisico e de jogador.
+magia - se ganha ao usar magias efetivamente.
+fisico - ao golpear, sofrer dano ou bloquear.
+jogador - nivel geral ao derrotar monstro, completar quests e completar conquistas.
+ 
+ }
+ // % da progressão de cada nivel ? balanceamento ?
+conversa {
+    iteragir com um cpc-
+    -   quando feito o npc deve parar e olhar para o jogador.
+    -   uma tela de conversa deve aparecer com as opções disponiveis
+}
+// sistema de conversa ?
+comercio / craft {
+
+os dois são a mesca coisa
+
+tendo os requisitos voce pode comprar/fazer
+// já ta feito só escrevi para documentar
+}
+// itens ? tipo de itens ?
+combate{
+    dar dano:
+    armas fisicas = são testadas em fisica, então são usadas colliders, armas fisicas devem deduzir a defesa.
+    armas magicas = são target, tem um cd alto, ignoram a armadura.
+
+    receber dano = armadura e vida são ambas uma barra que são diminuidas, quando a armadura chegar a 0 é descontado na vida.
+}
+// tipo de maigia ?

@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!181963792 &2655988077585873504
+Preset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: preset_atalhos
+  m_TargetType:
+    m_NativeTypeID: 114
+    m_ManagedTypePPtr: {fileID: 11500000, guid: 39ba4e92b917cb34386220d3dced55eb, type: 3}
+    m_ManagedTypeFallback: 
+  m_Properties:
+  - target: {fileID: 0}
+    propertyPath: m_Enabled
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorHideFlags
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorClassIdentifier
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: paraFrente
+    value: 119
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: paraTras
+    value: 115
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: paraEsquerda
+    value: 97
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: paraDireita
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: paraPular
+    value: 32
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: paraCorrer
+    value: 303
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: inventario
+    value: 101
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: interagir
+    value: 102
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: abrirMapa
+    value: 109
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: diario
+    value: 9
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: itemA
+    value: 257
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: itemB
+    value: 258
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: itemC
+    value: 259
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: itemD
+    value: 260
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: AtivarMagia
+    value: 113
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: magiaA
+    value: 257
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: magiaB
+    value: 258
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: magicaC
+    value: 259
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: magiaD
+    value: 260
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: acao
+    value: 323
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: auxiliar
+    value: 324
+    objectReference: {fileID: 0}
+  m_ExcludedProperties: []

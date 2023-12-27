@@ -68,7 +68,7 @@ namespace Estruturas
                     clk.mostrarResumo(au.narrativa.resumo.text);
 
 
-                    if (Input.GetMouseButtonDown(0))
+                    if (Input.GetKeyDown(GerenciadorDeTeclado.instanc.acao))
                     {
                         
                         aux.Clickando();

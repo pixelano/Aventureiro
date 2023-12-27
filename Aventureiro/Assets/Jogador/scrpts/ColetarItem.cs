@@ -7,6 +7,7 @@ namespace JogadorA
     public class ColetarItem : MonoBehaviour
     {
         public Inventa inventario;
+        
         public float maximoDistancia;
         private void Update()
         {
@@ -17,7 +18,7 @@ namespace JogadorA
             {
                 if (rh.collider.tag == "Item")
                 {
-                    if (Input.GetKeyDown(KeyCode.E))
+                    if (Input.GetKeyDown(GerenciadorDeTeclado.instanc.interagir))
                     {
                         inventario.ColetarItem(rh.collider.gameObject);
 

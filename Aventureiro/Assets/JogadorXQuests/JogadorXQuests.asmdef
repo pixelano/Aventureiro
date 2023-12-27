@@ -1,7 +1,9 @@
 {
     "name": "JogadorXQuests",
     "rootNamespace": "JogadorXQuestsA",
-    "references": [],
+    "references": [
+        "GUID:d0f3ef1a0a81727469d99bd91d9e8379"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

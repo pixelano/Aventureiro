@@ -512,7 +512,10 @@ namespace Ageral
         #endregion
         // criar sistema de estradas internas
         [SerializeField]
-        public conexao entrada ,saida ;
+        public conexao entrada;
+
+        [SerializeField]    
+        public conexao saida ;
         public List<conexao> conecxoes = new List<conexao>();
     }
     [System.Serializable]

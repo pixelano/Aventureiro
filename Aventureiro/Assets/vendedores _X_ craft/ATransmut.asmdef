@@ -3,7 +3,8 @@
     "rootNamespace": "ATransmut",
     "references": [
         "ItensA",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "Npcs"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
